@@ -2,6 +2,7 @@ package com.njackal.mmo;
 
 import com.njackal.mmo.event.PlayerDamage;
 import com.njackal.mmo.event.PlayerDamageHandler;
+import com.njackal.mmo.logic.XPEventHandler;
 import net.fabricmc.api.ModInitializer;
 
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
@@ -20,6 +21,8 @@ public class FabricMMO implements ModInitializer {
 
 	private PlayerDamageHandler playerDamageHandler;
 
+	private XPEventHandler xpEventHandler;
+
 	@Override
 	public void onInitialize() {
 		// This code runs as soon as Minecraft is in a mod-load-ready state.
@@ -27,6 +30,7 @@ public class FabricMMO implements ModInitializer {
 		// Proceed with mild caution.
 		LOGGER.info("Initializing Fabric MMO");
 		playerDamageHandler = new PlayerDamageHandler();
+		xpEventHandler = new XPEventHandler();
 
 		LOGGER.debug("Initialized");//todo get log levels working
 
@@ -38,5 +42,7 @@ public class FabricMMO implements ModInitializer {
 			}
 			return true; // pass the damage
 		});
+
+		playerDamageHandler.observe(xpEventHandler);
 	}
 }

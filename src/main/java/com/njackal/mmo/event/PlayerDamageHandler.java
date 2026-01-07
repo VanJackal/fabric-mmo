@@ -6,10 +6,14 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 
+import java.util.LinkedList;
 import java.util.List;
 
 public class PlayerDamageHandler {
-    public PlayerDamageHandler() {}
+    private final List<PlayerXPEvent> observers;
+    public PlayerDamageHandler() {
+        observers = new LinkedList<>();
+    }
 
     public void handleDamageEvent(PlayerDamage damage) {
         FabricMMO.LOGGER.info(damage.toString()); // todo change to debug
@@ -34,8 +38,14 @@ public class PlayerDamageHandler {
             xp = XPType.Unarmed;
         }
 
-        FabricMMO.LOGGER.info("{} earned {} {} xp", damage.player(), damage.damageDealt(), xp);//todo debug
 
-
+        for (PlayerXPEvent observer : observers) {
+            observer.gainXP(xp, (int) damage.damageDealt(), damage.player());
+        }
     }
+
+    public void observe(PlayerXPEvent xpEventHandler) {
+        observers.add(xpEventHandler);
+    }
+
 }
