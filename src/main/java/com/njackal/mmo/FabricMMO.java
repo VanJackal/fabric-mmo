@@ -1,13 +1,15 @@
 package com.njackal.mmo;
 
+import com.njackal.mmo.event.BlockBreakData;
+import com.njackal.mmo.event.BlockBreakHandler;
 import com.njackal.mmo.event.PlayerDamage;
 import com.njackal.mmo.event.PlayerDamageHandler;
 import com.njackal.mmo.logic.XPEventHandler;
 import net.fabricmc.api.ModInitializer;
 
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
+import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,6 +22,7 @@ public class FabricMMO implements ModInitializer {
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
 	private PlayerDamageHandler playerDamageHandler;
+	private BlockBreakHandler blockBreakHandler;
 
 	private XPEventHandler xpEventHandler;
 
@@ -30,10 +33,23 @@ public class FabricMMO implements ModInitializer {
 		// Proceed with mild caution.
 		LOGGER.info("Initializing Fabric MMO");
 		playerDamageHandler = new PlayerDamageHandler();
+		blockBreakHandler = new BlockBreakHandler();
+
 		xpEventHandler = new XPEventHandler();
 
 		LOGGER.debug("Initialized");//todo get log levels working
 
+
+		PlayerBlockBreakEvents.BEFORE.register((
+				world,
+				player,
+				pos,
+				state,
+				entity)->{
+			BlockBreakData blockBreakData = BlockBreakData.of(player, state);
+			blockBreakHandler.handleBlockBreakEvent(blockBreakData);
+			return true;
+		});
 
 		ServerLivingEntityEvents.ALLOW_DAMAGE.register((entity, source,amount)->{
 			if (source.getEntity() instanceof Player) {
@@ -44,5 +60,6 @@ public class FabricMMO implements ModInitializer {
 		});
 
 		playerDamageHandler.observe(xpEventHandler);
+		blockBreakHandler.observe(xpEventHandler);
 	}
 }

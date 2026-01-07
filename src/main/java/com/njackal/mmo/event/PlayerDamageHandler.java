@@ -6,13 +6,11 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 
-import java.util.LinkedList;
 import java.util.List;
 
-public class PlayerDamageHandler {
-    private final List<PlayerXPEvent> observers;
+public class PlayerDamageHandler extends PlayerEventHandler {
     public PlayerDamageHandler() {
-        observers = new LinkedList<>();
+        super();
     }
 
     public void handleDamageEvent(PlayerDamage damage) {
@@ -38,14 +36,7 @@ public class PlayerDamageHandler {
             xp = XPType.Unarmed;
         }
 
-
-        for (PlayerXPEvent observer : observers) {
-            observer.gainXP(xp, (int) damage.damageDealt(), damage.player());
-        }
-    }
-
-    public void observe(PlayerXPEvent xpEventHandler) {
-        observers.add(xpEventHandler);
+        fireXpEvent(xp, (int) damage.damageDealt(), damage.player());
     }
 
 }
