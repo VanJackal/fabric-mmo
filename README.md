@@ -12,6 +12,7 @@ An mcMMO clone for fabric.
 - [ ] Maces
 - [ ] Axes
 - [ ] Unarmed
+- [ ] TNT
 
 ### Tools
 - [ ] Mining
