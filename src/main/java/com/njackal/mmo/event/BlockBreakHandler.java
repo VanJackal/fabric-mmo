@@ -102,13 +102,13 @@ public class BlockBreakHandler extends PlayerEventHandler {
         // get xp type and amount for tool/block mined
         if (data.toolTags().contains(ItemTags.AXES)) {
             xpType = XPType.Woodcutting;
-            xpAmount = woodcuttingXpDict.get(minedBlock);
+            xpAmount = woodcuttingXpDict.getOrDefault(minedBlock, 0);
         } else if (data.toolTags().contains(ItemTags.PICKAXES)) {
             xpType = XPType.Mining;
-            xpAmount = miningXpDict.get(minedBlock);
+            xpAmount = miningXpDict.getOrDefault(minedBlock,0);
         } else if (data.toolTags().contains(ItemTags.SHOVELS)) {
             xpType = XPType.Excavation;
-            xpAmount = excavationXpDict.get(minedBlock);
+            xpAmount = excavationXpDict.getOrDefault(minedBlock, 0);
         } else {
             return; //exit early, no xp gain
         }
