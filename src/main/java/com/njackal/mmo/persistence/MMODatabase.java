@@ -75,7 +75,8 @@ public class MMODatabase {
         }
     }
 
-    public void addXp(UUID player, XPType xpType, int xpAmount) {
+    public int addXp(UUID player, XPType xpType, int xpAmount) {
+        int totalXp = 0;
         try {
             PreparedStatement statement = conn.prepareStatement(
                     "INSERT INTO xp (PlayerID, %s) VALUES (?, ?) ON DUPLICATE KEY UPDATE %s = %s + ?;".replaceAll("%s",xpType.dbId)
@@ -88,9 +89,19 @@ public class MMODatabase {
 
             LOGGER.info("{} {} XP added to {}", xpAmount, xpType, player);//todo debug
 
+            PreparedStatement s = conn.prepareStatement("SELECT %s FROM xp WHERE PlayerID = ?;".replaceAll("%s",xpType.dbId));
+            s.setString(1, player.toString());
+            ResultSet rs = s.executeQuery();
+            if (rs.next()) {
+                totalXp = rs.getInt(1);
+            }
+            rs.close();
         } catch (SQLException e) {
             LOGGER.error("Failed to add XP to database in MMODatabase");
             LOGGER.error(e.getMessage());
+            throw new DatabaseException("Failed to add XP to database in MMODatabase");
         }
+
+        return totalXp;
     }
 }

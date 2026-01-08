@@ -2,6 +2,7 @@ package com.njackal.mmo.logic;
 
 import com.njackal.mmo.FabricMMO;
 import com.njackal.mmo.event.PlayerXPEvent;
+import com.njackal.mmo.persistence.DatabaseException;
 import com.njackal.mmo.persistence.MMODatabase;
 import com.njackal.mmo.persistence.XPType;
 
@@ -25,10 +26,14 @@ public class XPEventHandler implements PlayerXPEvent {
     @Override
     public void gainXP(XPType type, int xp, UUID player) {
         FabricMMO.LOGGER.info("{} earned {} {} xp", player, xp, type);//todo debug
-        database.addXp(player,type, xp);
+        try {
+            int totalXp = database.addXp(player,type, xp);
 
-        fireLevelUpEvent(player, type, xp, xp *10, xp%5);
-        fireXpGainEvent(player, type, xp, xp *10, xp%5);
+            fireLevelUpEvent(player, type, xp, totalXp, XPMath.levelFromXp(totalXp));
+            fireXpGainEvent(player, type, xp, totalXp, XPMath.levelFromXp(totalXp));
+        } catch ( DatabaseException e ) {
+            return;// fail gracefully if the database fails
+        }
     }
 
 
