@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.*;
+import java.util.UUID;
 
 public class MMODatabase {
 
@@ -45,13 +46,51 @@ public class MMODatabase {
         try {// init table
 
             PreparedStatement statement = conn.prepareStatement(
-                    "CREATE TABLE xp (Swords INT, Archery INT, Crossbows INT, Tridents INT, Spears INT, Maces INT, Axes INT, Unarmed INT, TNT INT, Mining INT, Excavation INT, Woodcutting INT, Acrobatics INT, Alchemy INT, Fishing Int, Herbalism INT, Repair INT, Taming INT);"
+                    "CREATE TABLE xp (PlayerID VARCHAR(64), " +
+                            "Swords INT DEFAULT 0, " +
+                            "Archery INT DEFAULT 0, " +
+                            "Crossbows INT DEFAULT 0, " +
+                            "Tridents INT DEFAULT 0, " +
+                            "Spears INT DEFAULT 0, " +
+                            "Maces INT DEFAULT 0, " +
+                            "Axes INT DEFAULT 0, " +
+                            "Unarmed INT DEFAULT 0, " +
+                            "TNT INT DEFAULT 0, " +
+                            "Mining INT DEFAULT 0, " +
+                            "Excavation INT DEFAULT 0, " +
+                            "Woodcutting INT DEFAULT 0, " +
+                            "Acrobatics INT DEFAULT 0, " +
+                            "Alchemy INT DEFAULT 0, " +
+                            "Fishing INT DEFAULT 0, " +
+                            "Herbalism INT DEFAULT 0, " +
+                            "Repair INT DEFAULT 0, " +
+                            "Taming INT DEFAULT 0, " +
+                            "PRIMARY KEY (PlayerID));"
             );
             statement.execute();
             LOGGER.info("Table Initialized");
         } catch (SQLException e) {
             LOGGER.error("Failed to create tables in MMODatabase");
             throw new RuntimeException(e);
+        }
+    }
+
+    public void addXp(UUID player, XPType xpType, int xpAmount) {
+        try {
+            PreparedStatement statement = conn.prepareStatement(
+                    "INSERT INTO xp (PlayerID, %s) VALUES (?, ?) ON DUPLICATE KEY UPDATE %s = %s + ?;".replaceAll("%s",xpType.dbId)
+            );
+            statement.setString(1, player.toString());
+            statement.setInt(2, xpAmount);
+            statement.setInt(3, xpAmount);
+
+            statement.executeUpdate();
+
+            LOGGER.info("{} {} XP added to {}", xpAmount, xpType, player);//todo debug
+
+        } catch (SQLException e) {
+            LOGGER.error("Failed to add XP to database in MMODatabase");
+            LOGGER.error(e.getMessage());
         }
     }
 }

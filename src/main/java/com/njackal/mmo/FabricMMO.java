@@ -38,13 +38,14 @@ public class FabricMMO implements ModInitializer {
 		playerDamageHandler = new PlayerDamageHandler();
 		blockBreakHandler = new BlockBreakHandler();
 
-		xpEventHandler = new XPEventHandler();
 
 		database = new MMODatabase(//todo load this from config
 				"jdbc:mysql://localhost/fabricmmo",
 				"root",
 				"123"
 		);
+
+		xpEventHandler = new XPEventHandler(database);
 
 		LOGGER.debug("Initialized");//todo get log levels working
 
