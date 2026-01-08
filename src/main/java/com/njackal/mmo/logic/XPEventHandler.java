@@ -28,12 +28,25 @@ public class XPEventHandler implements PlayerXPEvent {
         FabricMMO.LOGGER.info("{} earned {} {} xp", player, xp, type);//todo debug
         try {
             int totalXp = database.addXp(player,type, xp);
+            int level = XPMath.levelFromXp(totalXp);
 
-            fireLevelUpEvent(player, type, xp, totalXp, XPMath.levelFromXp(totalXp));
-            fireXpGainEvent(player, type, xp, totalXp, XPMath.levelFromXp(totalXp));
+            if (didLevelUp(xp, totalXp, level)) {
+                fireLevelUpEvent(player, type, xp, totalXp, level);
+            } else if (canShowXpGain(xp, totalXp, level)){
+                fireXpGainEvent(player, type, xp, totalXp, level);
+            }
         } catch ( DatabaseException e ) {
             return;// fail gracefully if the database fails
         }
+    }
+
+    private boolean canShowXpGain(int xp, int totalXp, int level) {
+        return true;//todo this needs a entity component that tracks xp since last levelup
+    }
+
+    private boolean didLevelUp(int xpGain, int totalXp, int level) {
+        int reqXp = XPMath.xpFromLevel(level);
+        return totalXp - xpGain < reqXp;
     }
 
 
