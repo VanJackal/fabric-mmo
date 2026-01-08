@@ -6,6 +6,7 @@ import com.njackal.mmo.event.PlayerDamage;
 import com.njackal.mmo.event.PlayerDamageHandler;
 import com.njackal.mmo.logic.XPEventHandler;
 import com.njackal.mmo.persistence.MMODatabase;
+import com.njackal.mmo.presentation.PlayerUIHandler;
 import net.fabricmc.api.ModInitializer;
 
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
@@ -29,6 +30,8 @@ public class FabricMMO implements ModInitializer {
 
 	private MMODatabase database;
 
+	private PlayerUIHandler playerUIHandler;
+
 	@Override
 	public void onInitialize() {
 		// This code runs as soon as Minecraft is in a mod-load-ready state.
@@ -46,6 +49,8 @@ public class FabricMMO implements ModInitializer {
 		);
 
 		xpEventHandler = new XPEventHandler(database);
+
+		playerUIHandler = new PlayerUIHandler();
 
 		LOGGER.debug("Initialized");//todo get log levels working
 
@@ -71,5 +76,8 @@ public class FabricMMO implements ModInitializer {
 
 		playerDamageHandler.observe(xpEventHandler);
 		blockBreakHandler.observe(xpEventHandler);
+
+		xpEventHandler.observeLevelUp(playerUIHandler);
+		xpEventHandler.observeXpGain(playerUIHandler);
 	}
 }
