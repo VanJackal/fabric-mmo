@@ -50,6 +50,8 @@ public class PlayerUIHandler implements LevelUpEvent, XPGainEvent {
             serverPlayer.connection.send(new ClientboundSetTitleTextPacket(
                     Component.literal("Level Up!").withStyle(ChatFormatting.GOLD)
             ));
+
+            xpGained(player, type, 1,1);// show a full xp bar on level up
         } else {
             FabricMMO.LOGGER.warn("Player: {} not found on show level up.", player);
         }
