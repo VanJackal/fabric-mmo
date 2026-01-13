@@ -10,7 +10,9 @@ import com.njackal.mmo.presentation.PlayerUIHandler;
 import net.fabricmc.api.ModInitializer;
 
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.entity.player.Player;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,6 +34,8 @@ public class FabricMMO implements ModInitializer {
 
 	private PlayerUIHandler playerUIHandler;
 
+	private MinecraftServer minecraftServer;
+
 	@Override
 	public void onInitialize() {
 		// This code runs as soon as Minecraft is in a mod-load-ready state.
@@ -50,10 +54,20 @@ public class FabricMMO implements ModInitializer {
 
 		xpEventHandler = new XPEventHandler(database);
 
-		playerUIHandler = new PlayerUIHandler();
 
 		LOGGER.debug("Initialized");//todo get log levels working
 
+		ServerTickEvents.START_SERVER_TICK.register(server -> {
+			if (minecraftServer == null) {
+				minecraftServer = server;
+				afterServerInit();
+			}
+		});
+	}
+
+	private void afterServerInit(){
+		LOGGER.info("Server Init");
+		playerUIHandler = new PlayerUIHandler(minecraftServer);
 
 		PlayerBlockBreakEvents.BEFORE.register((
 				world,
