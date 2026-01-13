@@ -12,6 +12,7 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.entity.player.Player;
 import org.slf4j.Logger;
@@ -93,5 +94,14 @@ public class FabricMMO implements ModInitializer {
 
 		xpEventHandler.observeLevelUp(playerUIHandler);
 		xpEventHandler.observeXpGain(playerUIHandler);
+
+		//UI Bossbar initializer
+		ServerPlayConnectionEvents.JOIN.register((handler, sender, server)->{
+			playerUIHandler.initPlayerBar(handler.getPlayer());
+		});
+		//UI Bossbar destructor
+		ServerPlayConnectionEvents.DISCONNECT.register((handler, sender)->{
+			playerUIHandler.removePlayerBar(handler.getPlayer().getUUID());
+		});
 	}
 }

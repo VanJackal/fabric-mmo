@@ -78,13 +78,34 @@ public class PlayerUIHandler implements LevelUpEvent, XPGainEvent {
 
     private CustomBossEvent getBossEvent(UUID player, ServerPlayer serverPlayer) {
         if (!customBossEvents.containsKey(player)) {
-            CustomBossEvent event = new CustomBossEvent(Identifier.fromNamespaceAndPath(FabricMMO.MOD_ID, "bossbar"), Component.literal("YOU SHOULDN'T SEE THIS"));
-            event.setColor(BossEvent.BossBarColor.GREEN);
-            event.setOverlay(BossEvent.BossBarOverlay.NOTCHED_10);
-            event.addPlayer(serverPlayer);
-            customBossEvents.put(player, event);
+            initPlayerBar(player, serverPlayer);
         }
         return customBossEvents.get(player);
+    }
+
+    /**
+     * initialize bossbar for a player
+     * @param serverPlayer player to init
+     */
+    public void initPlayerBar(ServerPlayer serverPlayer) {
+        initPlayerBar(serverPlayer.getUUID(), serverPlayer);
+    }
+
+    /**
+     * remove a players bossbar handler
+     * @param player player to remove bossbar for
+     */
+    public void removePlayerBar(UUID player) {
+        customBossEvents.remove(player);
+    }
+
+    private void initPlayerBar(UUID player, ServerPlayer serverPlayer) {
+        CustomBossEvent event = new CustomBossEvent(Identifier.fromNamespaceAndPath(FabricMMO.MOD_ID, "bossbar"), Component.literal("YOU SHOULDN'T SEE THIS"));
+        event.setColor(BossEvent.BossBarColor.GREEN);
+        event.setOverlay(BossEvent.BossBarOverlay.NOTCHED_10);
+        event.addPlayer(serverPlayer);
+        event.setVisible(false);
+        customBossEvents.put(player, event);
     }
 
     private void scheduleBarVanish(UUID player, CustomBossEvent bossEvent) {
