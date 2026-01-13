@@ -8,9 +8,8 @@ public interface XPGainEvent {
     /**
      * @param player player gaining xp
      * @param type type of xp gained
-     * @param xpGain amount of xp gained
-     * @param xpTotal total xp overall after gain
-     * @param level current player level
+     * @param xpCurrent current amount of xp
+     * @param xpMax max xp for level
      */
-    void xpGained(UUID player, XPType type, int xpGain, int xpTotal, int level);
+    void xpGained(UUID player, XPType type, int xpCurrent, int xpMax);
 }
