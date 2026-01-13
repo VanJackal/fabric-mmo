@@ -39,7 +39,9 @@ public class XPEventHandler implements PlayerXPEvent {
             if (didLevelUp(xp, totalXp, level)) {
                 fireLevelUpEvent(player, type, xp, totalXp, level);
             } else if (canShowXpGain(delta, level)){
-                fireXpGainEvent(player, type, totalXp, XPMath.xpFromLevel(level + 1) - XPMath.levelFromXp(totalXp));
+                int currentLevelXp = XPMath.xpFromLevel(level);
+                fireXpGainEvent(player, type, totalXp - currentLevelXp,
+                        XPMath.xpFromLevel(level + 1) - currentLevelXp);
                 resetXPDelta(player, type);// reset delta since we've shown xp
             }
         } catch ( DatabaseException e ) {

@@ -17,15 +17,25 @@ import net.minecraft.world.BossEvent;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 public class PlayerUIHandler implements LevelUpEvent, XPGainEvent {
+    private static final int BOSSBAR_VANISH_TIME = 2; //time to vanish in seconds
+
     private final MinecraftServer minecraftServer;
 
     private final Map<UUID, CustomBossEvent> customBossEvents;
+    private final ScheduledExecutorService scheduler;
+    private final Map<UUID, ScheduledFuture<?>> vanishTimeouts;
 
     public PlayerUIHandler(MinecraftServer minecraftServer) {
         this.minecraftServer = minecraftServer;
         customBossEvents = new HashMap<>();
+        scheduler = Executors.newSingleThreadScheduledExecutor();
+        vanishTimeouts = new HashMap<>();
     }
 
     @Override
@@ -56,6 +66,8 @@ public class PlayerUIHandler implements LevelUpEvent, XPGainEvent {
             bossEvent.setMax(xpMax);
             bossEvent.setVisible(true);
 
+            scheduleBarVanish(player, bossEvent);
+
         } else {
             FabricMMO.LOGGER.warn("Player: {} not found on show xp gain", player);
         }
@@ -71,5 +83,14 @@ public class PlayerUIHandler implements LevelUpEvent, XPGainEvent {
             customBossEvents.put(player, event);
         }
         return customBossEvents.get(player);
+    }
+
+    private void scheduleBarVanish(UUID player, CustomBossEvent bossEvent) {
+        ScheduledFuture<?> future = scheduler.schedule(() -> bossEvent.setVisible(false),BOSSBAR_VANISH_TIME,TimeUnit.SECONDS);
+        if (vanishTimeouts.containsKey(player)) {
+            vanishTimeouts.get(player).cancel(false);
+            vanishTimeouts.remove(player);
+        }
+        vanishTimeouts.put(player, future);
     }
 }
