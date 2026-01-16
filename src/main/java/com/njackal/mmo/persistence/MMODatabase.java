@@ -53,6 +53,7 @@ public class MMODatabase {
                             "Crossbows INT DEFAULT 0, " +
                             "Tridents INT DEFAULT 0, " +
                             "Spears INT DEFAULT 0, " +
+                            "Swords INT DEFAULT 0, " +
                             "Maces INT DEFAULT 0, " +
                             "Axes INT DEFAULT 0, " +
                             "Unarmed INT DEFAULT 0, " +
