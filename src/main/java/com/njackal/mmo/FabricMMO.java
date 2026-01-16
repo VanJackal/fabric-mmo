@@ -4,6 +4,7 @@ import com.njackal.mmo.event.BlockBreakData;
 import com.njackal.mmo.event.BlockBreakHandler;
 import com.njackal.mmo.event.PlayerDamage;
 import com.njackal.mmo.event.PlayerDamageHandler;
+import com.njackal.mmo.logic.ConfigHandler;
 import com.njackal.mmo.logic.XPEventHandler;
 import com.njackal.mmo.persistence.MMODatabase;
 import com.njackal.mmo.presentation.PlayerUIHandler;
@@ -30,6 +31,7 @@ public class FabricMMO implements ModInitializer {
 	private BlockBreakHandler blockBreakHandler;
 
 	private XPEventHandler xpEventHandler;
+	private ConfigHandler configHandler;
 
 	private MMODatabase database;
 
@@ -54,6 +56,7 @@ public class FabricMMO implements ModInitializer {
 		);
 
 		xpEventHandler = new XPEventHandler(database);
+		configHandler = new ConfigHandler(database);
 
 
 		LOGGER.debug("Initialized");//todo get log levels working
@@ -68,7 +71,7 @@ public class FabricMMO implements ModInitializer {
 
 	private void afterServerInit(){
 		LOGGER.info("Server Init");
-		playerUIHandler = new PlayerUIHandler(minecraftServer);
+		playerUIHandler = new PlayerUIHandler(minecraftServer, configHandler);
 
 		PlayerBlockBreakEvents.BEFORE.register((
 				world,

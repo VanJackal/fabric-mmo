@@ -47,7 +47,8 @@ public class MMODatabase {
 
             PreparedStatement statement = conn.prepareStatement(
                     "CREATE TABLE xp (PlayerID VARCHAR(64), " +
-                            "Swords INT DEFAULT 0, " +
+                            "NotifMode VARCHAR(16) DEFAULT 'title', " +
+                            "XPBarEnabled TINYINT DEFAULT 1, " +
                             "Archery INT DEFAULT 0, " +
                             "Crossbows INT DEFAULT 0, " +
                             "Tridents INT DEFAULT 0, " +
@@ -104,4 +105,90 @@ public class MMODatabase {
 
         return totalXp;
     }
+
+    /**
+     * set notification mode for a player
+     * @param uuid player id to set for
+     * @param mode mode to set to
+     */
+    public void setNotifMode(UUID uuid, NotificationMode mode) {
+        try {
+            PreparedStatement statement =
+                    conn.prepareStatement("UPDATE xp SET NotifMode = ? WHERE PlayerID = ?;");
+            statement.setString(1, mode.value);
+            statement.setString(2, uuid.toString());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            LOGGER.warn("Failed to set notif mode for {}", uuid);
+            LOGGER.error(e.getMessage());
+        }
+    }
+
+    /**
+     * get notification mode for a player
+     *
+     * @param uuid player to get notification mode for
+     * @return notification mode for player
+     * @throws DatabaseException thrown if the sql fails or the mode is not found for the player
+     */
+    public NotificationMode getNotifMode(UUID uuid) throws DatabaseException {
+        String mode = "";
+        try {
+            PreparedStatement statement =
+                    conn.prepareStatement("SELECT NotifMode FROM xp WHERE PlayerID = ?");
+            statement.setString(1, uuid.toString());
+            ResultSet rs = statement.executeQuery();
+            if (rs.next()) {
+                return NotificationMode.fromValue(rs.getString(1));
+            } else {
+                throw new DatabaseException("Failed to get NotifMode for " + uuid);
+            }
+        } catch (SQLException e) {
+            LOGGER.warn("Failed to find notif mode for {}", uuid);
+            throw new DatabaseException("Failed query to get notif mode for " + uuid,e);
+        }
+
+    }
+
+    /**
+     * set xp bar visibility for a player
+     * @param uuid player to set for
+     * @param enabled is bar visible
+     */
+    public void setXpBarEnabled(UUID uuid, boolean enabled) {
+        try {
+            PreparedStatement statement =
+                    conn.prepareStatement("UPDATE xp SET XPBarEnabled = ? WHERE PlayerID = ?");
+            statement.setInt(1, enabled? 1: 0);
+            statement.setString(2, uuid.toString());
+        } catch (SQLException e) {
+            LOGGER.warn("Failed to set XPBarEnabled for {}", uuid);
+        }
+    }
+
+    /**
+     * get xp bar visibility for a player
+     * @param uuid player to get visibility for
+     * @return boolean whether xp bar is enabled
+     * @throws DatabaseException thrown if sql fails or player not found
+     */
+    public boolean getXpBarEnabled(UUID uuid) throws DatabaseException {
+        try {
+            PreparedStatement statement =
+                    conn.prepareStatement("SELECT XPBarEnabled FROM xp WHERE PlayerID = ?;");
+            statement.setString(1, uuid.toString());
+            ResultSet rs = statement.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            } else {
+                throw new DatabaseException("Failed to get XPBarEnabled for " + uuid);
+            }
+
+        } catch (SQLException e) {
+            LOGGER.warn("Failed to find XPBarEnabled for {}", uuid);
+            throw new DatabaseException("Failed query to find XPBarEnabled for " + uuid, e);
+        }
+    }
+
+
 }

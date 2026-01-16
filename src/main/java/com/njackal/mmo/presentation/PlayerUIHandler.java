@@ -1,6 +1,7 @@
 package com.njackal.mmo.presentation;
 
 import com.njackal.mmo.FabricMMO;
+import com.njackal.mmo.logic.ConfigHandler;
 import com.njackal.mmo.logic.LevelUpEvent;
 import com.njackal.mmo.logic.XPGainEvent;
 import com.njackal.mmo.persistence.XPType;
@@ -26,13 +27,15 @@ public class PlayerUIHandler implements LevelUpEvent, XPGainEvent {
     private static final int BOSSBAR_VANISH_TIME = 2; //time to vanish in seconds
 
     private final MinecraftServer minecraftServer;
+    private final ConfigHandler configHandler;
 
     private final Map<UUID, CustomBossEvent> customBossEvents;
     private final ScheduledExecutorService scheduler;
     private final Map<UUID, ScheduledFuture<?>> vanishTimeouts;
 
-    public PlayerUIHandler(MinecraftServer minecraftServer) {
+    public PlayerUIHandler(MinecraftServer minecraftServer, ConfigHandler configHandler) {
         this.minecraftServer = minecraftServer;
+        this.configHandler = configHandler;
         customBossEvents = new HashMap<>();
         scheduler = Executors.newSingleThreadScheduledExecutor();
         vanishTimeouts = new HashMap<>();
@@ -44,12 +47,9 @@ public class PlayerUIHandler implements LevelUpEvent, XPGainEvent {
 
         ServerPlayer serverPlayer = minecraftServer.getPlayerList().getPlayer(player);
         if (serverPlayer != null) {
-            serverPlayer.connection.send(new ClientboundSetSubtitleTextPacket(
-                    Component.literal(String.format("§f%s§r leveled up to level §f%d", type.dbId, level)).withStyle(ChatFormatting.GOLD)
-            ));
-            serverPlayer.connection.send(new ClientboundSetTitleTextPacket(
-                    Component.literal("Level Up!").withStyle(ChatFormatting.GOLD)
-            ));
+            switch (configHandler.getNotificationMode(player)) {
+                case Title -> levelUpTitle(type.dbId, level, serverPlayer);
+            }
 
             xpGained(player, type, 1,1);// show a full xp bar on level up
         } else {
@@ -59,6 +59,7 @@ public class PlayerUIHandler implements LevelUpEvent, XPGainEvent {
 
     @Override
     public void xpGained(UUID player, XPType type, int xpCurrent, int xpMax) {
+        if (!configHandler.getXPBarVisibility(player)) return;// exit early if xp display is disabled
 
         ServerPlayer serverPlayer = minecraftServer.getPlayerList().getPlayer(player);
         if (serverPlayer != null) {
@@ -115,5 +116,14 @@ public class PlayerUIHandler implements LevelUpEvent, XPGainEvent {
             vanishTimeouts.remove(player);
         }
         vanishTimeouts.put(player, future);
+    }
+
+    private void levelUpTitle(String type, int level, ServerPlayer serverPlayer) {
+        serverPlayer.connection.send(new ClientboundSetSubtitleTextPacket(
+                Component.literal(String.format("§f%s§r leveled up to level §f%d", type, level)).withStyle(ChatFormatting.GOLD)
+        ));
+        serverPlayer.connection.send(new ClientboundSetTitleTextPacket(
+                Component.literal("Level Up!").withStyle(ChatFormatting.GOLD)
+        ));
     }
 }
