@@ -98,7 +98,12 @@ public class FabricMMO implements ModInitializer {
 
 		ServerLivingEntityEvents.ALLOW_DAMAGE.register((entity, source,amount)->{
 			if (source.getEntity() instanceof Player) {
-				PlayerDamage damage = PlayerDamage.of(entity, source, amount);
+				PlayerDamage damage;
+				if (amount > entity.getHealth()){
+					damage = PlayerDamage.of(entity, source, entity.getHealth());
+				} else {
+					damage = PlayerDamage.of(entity, source, amount);
+				}
 				playerDamageHandler.handleDamageEvent(damage);
 			}
 			return true; // pass the damage
