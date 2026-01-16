@@ -4,20 +4,20 @@ An mcMMO clone for fabric.
 # Roadmap
 ## Skills
 ### Weapons
-- [ ] Swords
-- [ ] Archery
-- [ ] Crossbows
-- [ ] Tridents
-- [ ] Spears
-- [ ] Maces
-- [ ] Axes
-- [ ] Unarmed
+- [x] Swords
+- [x] Archery
+- [x] Crossbows
+- [x] Tridents
+- [x] Spears
+- [x] Maces
+- [x] Axes
+- [x] Unarmed
 - [ ] TNT
 
 ### Tools
-- [ ] Mining
-- [ ] Excavation
-- [ ] Woodcutting
+- [x] Mining
+- [x] Excavation
+- [x] Woodcutting
 
 ### Other
 - [ ] Acrobatics
@@ -28,4 +28,4 @@ An mcMMO clone for fabric.
 - [ ] Taming
 
 ## Other
-- command for disabling on screen notifications (per player and maybe global)
+- [ ] command for disabling on screen notifications (per player and maybe global)
