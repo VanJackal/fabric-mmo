@@ -177,6 +177,7 @@ public class MMODatabase {
                     conn.prepareStatement("UPDATE xp SET XPBarEnabled = ? WHERE PlayerID = ?");
             statement.setInt(1, enabled? 1: 0);
             statement.setString(2, uuid.toString());
+            statement.executeUpdate();
         } catch (SQLException e) {
             LOGGER.warn("Failed to set XPBarEnabled for {}", uuid);
         }

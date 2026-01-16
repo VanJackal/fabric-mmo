@@ -1,5 +1,7 @@
 package com.njackal.mmo;
 
+import com.mojang.brigadier.arguments.BoolArgumentType;
+import com.mojang.brigadier.arguments.StringArgumentType;
 import com.njackal.mmo.event.BlockBreakData;
 import com.njackal.mmo.event.BlockBreakHandler;
 import com.njackal.mmo.event.PlayerDamage;
@@ -7,17 +9,22 @@ import com.njackal.mmo.event.PlayerDamageHandler;
 import com.njackal.mmo.logic.ConfigHandler;
 import com.njackal.mmo.logic.XPEventHandler;
 import com.njackal.mmo.persistence.MMODatabase;
+import com.njackal.mmo.persistence.NotificationMode;
 import com.njackal.mmo.presentation.PlayerUIHandler;
 import net.fabricmc.api.ModInitializer;
 
+import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
+import net.minecraft.commands.Commands;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.entity.player.Player;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.awt.*;
 
 public class FabricMMO implements ModInitializer {
 	public static final String MOD_ID = "fabric-mmo";
@@ -67,6 +74,8 @@ public class FabricMMO implements ModInitializer {
 				afterServerInit();
 			}
 		});
+
+		commandInit();
 	}
 
 	private void afterServerInit(){
@@ -110,6 +119,50 @@ public class FabricMMO implements ModInitializer {
 		//initialize new players in the database
 		ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
 			database.initPlayer(handler.getPlayer().getUUID());
+		});
+	}
+
+	private void commandInit() {
+		LOGGER.info("Command Init");
+
+		CommandRegistrationCallback.EVENT.register((dispatch, context, selection) -> {
+			dispatch.register(
+					Commands.literal("mmo").then(
+							Commands.literal("xpbar").then(
+									Commands.argument("visible", BoolArgumentType.bool())
+											.executes((ctx) -> {
+												LOGGER.info("player setting xpbar visibility"); //todo trace
+												boolean visible = ctx.getArgument("visible", Boolean.class);
+												Player player = ctx.getSource().getPlayer();
+												if (player == null) { // fail if not executed by the player
+													return 0;
+												}
+												configHandler.setXPBarVisibility(player.getUUID(), visible);
+												return 1;
+											})
+							)
+					).then(
+							Commands.literal("notification").then(
+									Commands.argument("mode", StringArgumentType.string())
+											.suggests((ctx, builder)->{
+												for (NotificationMode mode : NotificationMode.values()){
+													builder.suggest(mode.value);
+												}
+												return builder.buildFuture();
+											})
+											.executes(ctx -> {
+												LOGGER.info("player setting notification mode"); //todo trace
+												Player player = ctx.getSource().getPlayer();
+												if (player == null) { // fail if not executed by the player
+													return 0;
+												}
+												NotificationMode mode = NotificationMode.fromValue(ctx.getArgument("mode", String.class));
+												configHandler.setNotificationMode(player.getUUID(), mode);
+												return 1;
+											})
+							)
+					)
+			);
 		});
 	}
 }
