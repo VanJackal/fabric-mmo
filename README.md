@@ -13,6 +13,7 @@ An mcMMO clone for fabric.
 - [x] Axes
 - [x] Unarmed
 - [ ] TNT
+- [ ] Shields
 
 ### Tools
 - [x] Mining
