@@ -106,5 +106,10 @@ public class FabricMMO implements ModInitializer {
 		ServerPlayConnectionEvents.DISCONNECT.register((handler, sender)->{
 			playerUIHandler.removePlayerBar(handler.getPlayer().getUUID());
 		});
+
+		//initialize new players in the database
+		ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
+			database.initPlayer(handler.getPlayer().getUUID());
+		});
 	}
 }

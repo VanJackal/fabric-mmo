@@ -107,6 +107,22 @@ public class MMODatabase {
     }
 
     /**
+     * try to initialize a player from their uuid, if the player already exists nothing happens
+     * @param uuid uuid of the player
+     */
+    public void initPlayer(UUID uuid) {
+        try {
+            PreparedStatement statement = conn.prepareStatement(
+                    "INSERT INTO xp (PlayerID) Values (?) ON DUPLICATE KEY UPDATE PlayerID = PlayerID;"
+            );
+            statement.setString(1, uuid.toString());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            LOGGER.error("failed to initialize db for {}", uuid);
+        }
+    }
+
+    /**
      * set notification mode for a player
      * @param uuid player id to set for
      * @param mode mode to set to
