@@ -25,4 +25,13 @@ public enum XPType {
     XPType(String dbId) {
         this.dbId = dbId;
     }
+
+    public static XPType fromDbId(String dbId) {
+        for (XPType xpType : XPType.values()) {
+            if (xpType.dbId.equalsIgnoreCase(dbId)) {
+                return xpType;
+            }
+        }
+        return null;
+    }
 }

@@ -13,7 +13,7 @@ public enum NotificationMode {
     }
 
     public static NotificationMode fromValue(String value) {
-        return switch (value) {
+        return switch (value.toLowerCase()) {
             case "title" -> Title;
             case "actionbar" -> Actionbar;
             case "chat" -> Chat;

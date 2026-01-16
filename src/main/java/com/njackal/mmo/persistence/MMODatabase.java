@@ -76,6 +76,23 @@ public class MMODatabase {
         }
     }
 
+    public int getXp(UUID player, XPType type) {
+        int xp = 0;
+        try {
+            PreparedStatement statement = conn.prepareStatement(
+                    String.format("SELECT %s FROM xp WHERE PlayerID = ?;", type.dbId)
+            );
+            statement.setString(1, player.toString());
+            ResultSet rs = statement.executeQuery();
+            if (rs.next()) {
+                xp = rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            LOGGER.error("Failed to get XP from database in MMODatabase");
+        }
+        return xp;
+    }
+
     public int addXp(UUID player, XPType xpType, int xpAmount) {
         int totalXp = 0;
         try {
@@ -148,7 +165,6 @@ public class MMODatabase {
      * @throws DatabaseException thrown if the sql fails or the mode is not found for the player
      */
     public NotificationMode getNotifMode(UUID uuid) throws DatabaseException {
-        String mode = "";
         try {
             PreparedStatement statement =
                     conn.prepareStatement("SELECT NotifMode FROM xp WHERE PlayerID = ?");

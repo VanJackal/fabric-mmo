@@ -8,8 +8,10 @@ import com.njackal.mmo.event.PlayerDamage;
 import com.njackal.mmo.event.PlayerDamageHandler;
 import com.njackal.mmo.logic.ConfigHandler;
 import com.njackal.mmo.logic.XPEventHandler;
+import com.njackal.mmo.logic.XPMath;
 import com.njackal.mmo.persistence.MMODatabase;
 import com.njackal.mmo.persistence.NotificationMode;
+import com.njackal.mmo.persistence.XPType;
 import com.njackal.mmo.presentation.PlayerUIHandler;
 import net.fabricmc.api.ModInitializer;
 
@@ -19,6 +21,7 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.minecraft.commands.Commands;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.entity.player.Player;
 import org.slf4j.Logger;
@@ -161,6 +164,59 @@ public class FabricMMO implements ModInitializer {
 												return 1;
 											})
 							)
+					).then(
+							Commands.literal("level").then(
+									Commands.argument("skill", StringArgumentType.string())
+											.suggests((ctx,builder)->{
+												String start = "";
+												try {
+													start = ctx.getArgument("skill", String.class).toLowerCase();
+												} catch (RuntimeException e) {
+													// do nothing, (doesn't seem to be a way to precheck this)
+												}
+
+												for (XPType t : XPType.values()){
+													if (start.isEmpty() || t.dbId.toLowerCase().startsWith(start)){
+														builder.suggest(t.dbId);
+													}
+												}
+
+												return builder.buildFuture();
+											})
+											.executes(ctx-> {
+												Player player = ctx.getSource().getPlayer();
+												if (player == null) { // fail if not executed by the player
+													return 0;
+												}
+												XPType type = XPType.fromDbId(ctx.getArgument("skill", String.class));
+												if (type == null) {
+													ctx.getSource().sendFailure(Component.literal("Invalid skill"));
+													return 0;
+												}
+
+												int level = XPMath.levelFromXp( database.getXp(player.getUUID(), type) );
+												ctx.getSource().sendSystemMessage(Component.literal("Your %s level is %d".formatted(type.name(), level)));
+
+												return 1;
+											})
+							).executes(ctx -> {
+								Player player = ctx.getSource().getPlayer();
+								if (player == null) { // fail if not executed by the player
+									return 0;
+								}
+
+								ctx.getSource().sendSystemMessage(
+										Component.literal("Your Levels:")
+								);
+								for(XPType t : XPType.values()){
+									ctx.getSource().sendSystemMessage(
+											Component.literal("%s: %d".formatted(t.name(), database.getXp(player.getUUID(), t)))
+									);
+								}
+
+
+								return 1;
+							})
 					)
 			);
 		});
