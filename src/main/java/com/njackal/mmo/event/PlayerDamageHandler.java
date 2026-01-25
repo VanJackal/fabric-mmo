@@ -14,7 +14,7 @@ public class PlayerDamageHandler extends PlayerEventHandler {
     }
 
     public void handleDamageEvent(PlayerDamage damage) {
-        FabricMMO.LOGGER.info(damage.toString()); // todo change to debug
+        FabricMMO.LOGGER.debug(damage.toString());
         XPType xp;
 
         List<TagKey<Item>> tags = damage.sourceItemTags();

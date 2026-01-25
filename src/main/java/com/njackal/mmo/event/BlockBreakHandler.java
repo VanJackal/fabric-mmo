@@ -92,7 +92,7 @@ public class BlockBreakHandler extends PlayerEventHandler {
     }
 
     public void handleBlockBreakEvent(BlockBreakData data) {
-        FabricMMO.LOGGER.info(data.toString()); //todo debug
+        FabricMMO.LOGGER.debug(data.toString());
 
         Block minedBlock = data.blockState().getBlock();
 

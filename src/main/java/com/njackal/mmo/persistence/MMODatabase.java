@@ -106,7 +106,7 @@ public class MMODatabase {
 
             statement.executeUpdate();
 
-            LOGGER.info("{} {} XP added to {}", xpAmount, xpType, player);//todo debug
+            LOGGER.debug("{} {} XP added to {}", xpAmount, xpType, player);
 
             PreparedStatement s = conn.prepareStatement("SELECT %s FROM xp WHERE PlayerID = ?;".replaceAll("%s",xpType.dbId));
             s.setString(1, player.toString());

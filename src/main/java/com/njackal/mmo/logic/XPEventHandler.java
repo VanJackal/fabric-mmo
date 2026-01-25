@@ -28,7 +28,7 @@ public class XPEventHandler implements PlayerXPEvent {
 
     @Override
     public void gainXP(XPType type, int xp, UUID player) {
-        FabricMMO.LOGGER.info("{} earned {} {} xp", player, xp, type);//todo debug
+        FabricMMO.LOGGER.debug("{} earned {} {} xp", player, xp, type);
         try {
             int totalXp = database.addXp(player,type, xp);
             int level = XPMath.levelFromXp(totalXp);

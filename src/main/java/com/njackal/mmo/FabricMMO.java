@@ -69,7 +69,7 @@ public class FabricMMO implements ModInitializer {
 		configHandler = new ConfigHandler(database);
 
 
-		LOGGER.debug("Initialized");//todo get log levels working
+		LOGGER.debug("Initialized");
 
 		ServerTickEvents.START_SERVER_TICK.register(server -> {
 			if (minecraftServer == null) {
@@ -139,7 +139,7 @@ public class FabricMMO implements ModInitializer {
 							Commands.literal("xpbar").then(
 									Commands.argument("visible", BoolArgumentType.bool())
 											.executes((ctx) -> {
-												LOGGER.info("player setting xpbar visibility"); //todo trace
+												LOGGER.trace("player setting xpbar visibility");
 												boolean visible = ctx.getArgument("visible", Boolean.class);
 												Player player = ctx.getSource().getPlayer();
 												if (player == null) { // fail if not executed by the player
@@ -159,7 +159,7 @@ public class FabricMMO implements ModInitializer {
 												return builder.buildFuture();
 											})
 											.executes(ctx -> {
-												LOGGER.info("player setting notification mode"); //todo trace
+												LOGGER.trace("player setting notification mode");
 												Player player = ctx.getSource().getPlayer();
 												if (player == null) { // fail if not executed by the player
 													return 0;
