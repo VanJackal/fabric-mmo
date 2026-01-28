@@ -1,0 +1,24 @@
+woodcutting:
+  blocks:
+    "minecraft:oak_log": 5
+    "minecraft:spruce_log": 5
+  tags:
+    "minecraft:logs": 5
+mining:
+  blocks:
+    "minecraft:oak_log": 5
+    "minecraft:spruce_log": 5
+  tags:
+    "minecraft:logs": 5
+excavation:
+  blocks:
+    "minecraft:oak_log": 5
+    "minecraft:spruce_log": 5
+  tags:
+    "minecraft:logs": 5
+herbalism:
+  blocks:
+    "minecraft:oak_log": 5
+    "minecraft:spruce_log": 5
+  tags:
+    "minecraft:logs": 5

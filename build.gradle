@@ -43,6 +43,9 @@ dependencies {
 
 	// mysql for database
 	modImplementation "com.mysql:mysql-connector-j:${project.mysql_jdbc_version}"
+
+	// config
+	modImplementation "org.yaml:snakeyaml:2.2"
 	
 }
 

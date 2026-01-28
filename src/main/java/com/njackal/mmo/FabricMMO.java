@@ -1,5 +1,6 @@
 package com.njackal.mmo;
 
+import com.njackal.mmo.config.ConfigManager;
 import com.njackal.mmo.event.*;
 import com.njackal.mmo.logic.PlayerConfigHandler;
 import com.njackal.mmo.logic.XPEventHandler;
@@ -21,6 +22,8 @@ import net.minecraft.world.entity.player.Player;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+
 public class FabricMMO implements ModInitializer {
 	public static final String MOD_ID = "fabric-mmo";
 
@@ -38,6 +41,7 @@ public class FabricMMO implements ModInitializer {
 	private PlayerConfigHandler playerConfigHandler;
 
 	private MMODatabase database;
+	private ConfigManager configManager;
 
 	private PlayerUIHandler playerUIHandler;
 	private CommandHandler commandHandler;
@@ -50,6 +54,8 @@ public class FabricMMO implements ModInitializer {
 		// However, some things (like resources) may still be uninitialized.
 		// Proceed with mild caution.
 		LOGGER.info("Initializing Fabric MMO");
+		configManager = new ConfigManager();
+
 		playerDamageHandler = new PlayerDamageHandler();
 		blockBreakHandler = new BlockBreakHandler();
 		acrobaticsHandler = new AcrobaticsHandler();
@@ -84,6 +90,11 @@ public class FabricMMO implements ModInitializer {
 
 	private void afterServerInit(){
 		LOGGER.info("Server Init");
+		try {
+			configManager.init("config/FabricMMO.yaml", "config.yaml", minecraftServer.registryAccess());
+		} catch (IOException e) {
+			LOGGER.error("Failed to load config", e);
+		}
 		playerUIHandler = new PlayerUIHandler(minecraftServer, playerConfigHandler);
 
 		PlayerBlockBreakEvents.BEFORE.register((
