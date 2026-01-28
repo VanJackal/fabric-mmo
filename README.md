@@ -24,7 +24,7 @@ An mcMMO clone for fabric.
 - [ ] Acrobatics
 - [ ] Alchemy
 - [ ] Fishing
-- [ ] Herbalism
+- [x] Herbalism
 - [ ] Repair
 - [ ] Taming
 
