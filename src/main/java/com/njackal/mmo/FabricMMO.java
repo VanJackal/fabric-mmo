@@ -12,7 +12,14 @@ import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
+import net.fabricmc.fabric.mixin.registry.sync.MappedRegistryAccessor;
+import net.minecraft.core.HolderGetter;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.world.damagesource.DamageType;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.player.Player;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -130,8 +137,10 @@ public class FabricMMO implements ModInitializer {
 
 
 		//Acrobatics
+		Registry<DamageType> damageTypeReg = minecraftServer.overworld().registryAccess().lookupOrThrow(Registries.DAMAGE_TYPE);
+		DamageType fallDamage = damageTypeReg.getValue(DamageTypes.FALL.identifier());
 		ServerLivingEntityEvents.ALLOW_DAMAGE.register(((livingEntity, damageSource, v) -> {
-			if ((livingEntity instanceof Player && damageSource.type().msgId().equals("fall"))) {
+			if ((livingEntity instanceof Player && damageSource.type() == fallDamage)) {
 				LOGGER.debug("player {} took {} fall damage", livingEntity.getUUID(), v);
 				acrobaticsHandler.handleAcrobatics(v, livingEntity.getUUID());
 			}
