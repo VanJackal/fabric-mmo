@@ -1,5 +1,6 @@
 package com.njackal.mmo.config;
 
+import com.njackal.mmo.FabricMMO;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
@@ -34,7 +35,6 @@ public class ConfigManager {
 
         Registry<Block> blocks = registryAccess.lookupOrThrow(Registries.BLOCK);
 
-        System.out.println(file.exists());
 
         InputStream inputStream = new FileInputStream(file);
 
@@ -46,6 +46,9 @@ public class ConfigManager {
                 BlockBreakConfig.from(map.get("herbalism"), blocks)
         );
 
+        FabricMMO.LOGGER.info("Config loaded");
+        FabricMMO.LOGGER.debug("Config loaded: {}",config);
+
         inputStream.close();
     }
 
@@ -55,5 +58,9 @@ public class ConfigManager {
             assert inputStream != null;
             Files.copy(inputStream, file.toPath());
         }
+    }
+
+    public MMOConfig config(){
+        return config;
     }
 }
