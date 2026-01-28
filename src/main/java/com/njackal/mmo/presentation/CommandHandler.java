@@ -3,7 +3,7 @@ package com.njackal.mmo.presentation;
 import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.njackal.mmo.FabricMMO;
-import com.njackal.mmo.logic.ConfigHandler;
+import com.njackal.mmo.logic.PlayerConfigHandler;
 import com.njackal.mmo.logic.XPMath;
 import com.njackal.mmo.persistence.MMODatabase;
 import com.njackal.mmo.persistence.NotificationMode;
@@ -14,11 +14,11 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 
 public class CommandHandler {
-    private final ConfigHandler configHandler;
+    private final PlayerConfigHandler playerConfigHandler;
     private final MMODatabase database;
 
-    public CommandHandler(ConfigHandler configHandler, MMODatabase database) {
-        this.configHandler = configHandler;
+    public CommandHandler(PlayerConfigHandler playerConfigHandler, MMODatabase database) {
+        this.playerConfigHandler = playerConfigHandler;
         this.database = database;
     }
 
@@ -37,7 +37,7 @@ public class CommandHandler {
                                                 if (player == null) { // fail if not executed by the player
                                                     return 0;
                                                 }
-                                                configHandler.setXPBarVisibility(player.getUUID(), visible);
+                                                playerConfigHandler.setXPBarVisibility(player.getUUID(), visible);
                                                 return 1;
                                             })
                             )
@@ -57,7 +57,7 @@ public class CommandHandler {
                                                     return 0;
                                                 }
                                                 NotificationMode mode = NotificationMode.fromValue(ctx.getArgument("mode", String.class));
-                                                configHandler.setNotificationMode(player.getUUID(), mode);
+                                                playerConfigHandler.setNotificationMode(player.getUUID(), mode);
                                                 return 1;
                                             })
                             )

@@ -1,9 +1,7 @@
 package com.njackal.mmo;
 
-import com.mojang.brigadier.arguments.BoolArgumentType;
-import com.mojang.brigadier.arguments.StringArgumentType;
 import com.njackal.mmo.event.*;
-import com.njackal.mmo.logic.ConfigHandler;
+import com.njackal.mmo.logic.PlayerConfigHandler;
 import com.njackal.mmo.logic.XPEventHandler;
 import com.njackal.mmo.persistence.MMODatabase;
 import com.njackal.mmo.presentation.CommandHandler;
@@ -19,8 +17,6 @@ import net.minecraft.world.entity.player.Player;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.awt.*;
-
 public class FabricMMO implements ModInitializer {
 	public static final String MOD_ID = "fabric-mmo";
 
@@ -35,7 +31,7 @@ public class FabricMMO implements ModInitializer {
 	private FishingHandler fishingHandler;
 
 	private XPEventHandler xpEventHandler;
-	private ConfigHandler configHandler;
+	private PlayerConfigHandler playerConfigHandler;
 
 	private MMODatabase database;
 
@@ -65,9 +61,9 @@ public class FabricMMO implements ModInitializer {
 		);
 
 		xpEventHandler = new XPEventHandler(database);
-		configHandler = new ConfigHandler(database);
+		playerConfigHandler = new PlayerConfigHandler(database);
 
-		commandHandler = new CommandHandler(configHandler, database);
+		commandHandler = new CommandHandler(playerConfigHandler, database);
 
 
 		LOGGER.debug("Initialized");
@@ -84,7 +80,7 @@ public class FabricMMO implements ModInitializer {
 
 	private void afterServerInit(){
 		LOGGER.info("Server Init");
-		playerUIHandler = new PlayerUIHandler(minecraftServer, configHandler);
+		playerUIHandler = new PlayerUIHandler(minecraftServer, playerConfigHandler);
 
 		PlayerBlockBreakEvents.BEFORE.register((
 				world,

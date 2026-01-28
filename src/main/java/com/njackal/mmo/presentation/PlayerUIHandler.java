@@ -1,7 +1,7 @@
 package com.njackal.mmo.presentation;
 
 import com.njackal.mmo.FabricMMO;
-import com.njackal.mmo.logic.ConfigHandler;
+import com.njackal.mmo.logic.PlayerConfigHandler;
 import com.njackal.mmo.logic.LevelUpEvent;
 import com.njackal.mmo.logic.XPGainEvent;
 import com.njackal.mmo.persistence.XPType;
@@ -29,15 +29,15 @@ public class PlayerUIHandler implements LevelUpEvent, XPGainEvent {
     private static final int BOSSBAR_VANISH_TIME = 2; //time to vanish in seconds
 
     private final MinecraftServer minecraftServer;
-    private final ConfigHandler configHandler;
+    private final PlayerConfigHandler playerConfigHandler;
 
     private final Map<UUID, CustomBossEvent> customBossEvents;
     private final ScheduledExecutorService scheduler;
     private final Map<UUID, ScheduledFuture<?>> vanishTimeouts;
 
-    public PlayerUIHandler(MinecraftServer minecraftServer, ConfigHandler configHandler) {
+    public PlayerUIHandler(MinecraftServer minecraftServer, PlayerConfigHandler playerConfigHandler) {
         this.minecraftServer = minecraftServer;
-        this.configHandler = configHandler;
+        this.playerConfigHandler = playerConfigHandler;
         customBossEvents = new HashMap<>();
         scheduler = Executors.newSingleThreadScheduledExecutor();
         vanishTimeouts = new HashMap<>();
@@ -49,7 +49,7 @@ public class PlayerUIHandler implements LevelUpEvent, XPGainEvent {
 
         ServerPlayer serverPlayer = minecraftServer.getPlayerList().getPlayer(player);
         if (serverPlayer != null) {
-            switch (configHandler.getNotificationMode(player)) {
+            switch (playerConfigHandler.getNotificationMode(player)) {
                 case Title -> levelUpTitle(type.dbId, level, serverPlayer);
                 case Actionbar -> levelUpActionbar(type.dbId, level, serverPlayer);
                 case Chat -> levelUpChat(type.dbId, level, serverPlayer);
@@ -63,7 +63,7 @@ public class PlayerUIHandler implements LevelUpEvent, XPGainEvent {
 
     @Override
     public void xpGained(UUID player, XPType type, int xpCurrent, int xpMax) {
-        if (!configHandler.getXPBarVisibility(player)) return;// exit early if xp display is disabled
+        if (!playerConfigHandler.getXPBarVisibility(player)) return;// exit early if xp display is disabled
 
         ServerPlayer serverPlayer = minecraftServer.getPlayerList().getPlayer(player);
         if (serverPlayer != null) {

@@ -7,10 +7,10 @@ import com.njackal.mmo.persistence.NotificationMode;
 
 import java.util.UUID;
 
-public class ConfigHandler {
+public class PlayerConfigHandler {
     private final MMODatabase database;
 
-    public ConfigHandler(MMODatabase database) {
+    public PlayerConfigHandler(MMODatabase database) {
         this.database = database;
     }
 
