@@ -2,10 +2,7 @@ package com.njackal.mmo;
 
 import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
-import com.njackal.mmo.event.BlockBreakData;
-import com.njackal.mmo.event.BlockBreakHandler;
-import com.njackal.mmo.event.PlayerDamage;
-import com.njackal.mmo.event.PlayerDamageHandler;
+import com.njackal.mmo.event.*;
 import com.njackal.mmo.logic.ConfigHandler;
 import com.njackal.mmo.logic.XPEventHandler;
 import com.njackal.mmo.logic.XPMath;
@@ -39,6 +36,7 @@ public class FabricMMO implements ModInitializer {
 
 	private PlayerDamageHandler playerDamageHandler;
 	private BlockBreakHandler blockBreakHandler;
+	private AcrobaticsHandler acrobaticsHandler;
 
 	private XPEventHandler xpEventHandler;
 	private ConfigHandler configHandler;
@@ -57,6 +55,7 @@ public class FabricMMO implements ModInitializer {
 		LOGGER.info("Initializing Fabric MMO");
 		playerDamageHandler = new PlayerDamageHandler();
 		blockBreakHandler = new BlockBreakHandler();
+		acrobaticsHandler = new AcrobaticsHandler();
 
 
 		database = new MMODatabase(//todo load this from config
@@ -111,6 +110,7 @@ public class FabricMMO implements ModInitializer {
 
 		playerDamageHandler.observe(xpEventHandler);
 		blockBreakHandler.observe(xpEventHandler);
+		acrobaticsHandler.observe(xpEventHandler);
 
 		xpEventHandler.observeLevelUp(playerUIHandler);
 		xpEventHandler.observeXpGain(playerUIHandler);
@@ -128,6 +128,17 @@ public class FabricMMO implements ModInitializer {
 		ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
 			database.initPlayer(handler.getPlayer().getUUID());
 		});
+
+
+		//Acrobatics
+		ServerLivingEntityEvents.ALLOW_DAMAGE.register(((livingEntity, damageSource, v) -> {
+			if ((livingEntity instanceof Player && damageSource.type().msgId().equals("fall"))) {
+				LOGGER.debug("player {} took {} fall damage", livingEntity.getUUID(), v);
+				acrobaticsHandler.handleAcrobatics(v, livingEntity.getUUID());
+			}
+
+			return true;
+		}));
 	}
 
 	private void commandInit() {

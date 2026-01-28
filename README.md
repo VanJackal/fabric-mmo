@@ -21,7 +21,7 @@ An mcMMO clone for fabric.
 - [x] Woodcutting
 
 ### Other
-- [ ] Acrobatics
+- [x] Acrobatics
 - [ ] Alchemy
 - [ ] Fishing
 - [x] Herbalism
