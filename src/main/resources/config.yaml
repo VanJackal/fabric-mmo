@@ -1,24 +1,85 @@
 woodcutting:
   blocks:
-    "minecraft:oak_log": 5
-    "minecraft:spruce_log": 5
   tags:
     "minecraft:logs": 5
 mining:
   blocks:
-    "minecraft:oak_log": 5
-    "minecraft:spruce_log": 5
+    "minecraft:stone": 1
+    "minecraft:andesite": 2
+    "minecraft:granite": 2
+    "minecraft:diorite": 2
+    "minecraft:tuff": 2
+    "minecraft:deepslate": 2
+    "minecraft:calcite": 3
+    "minecraft:netherrack": 1
+    "minecraft:blackstone": 2
+    "minecraft:basalt": 1
+    "minecraft:coal_ore": 5
+    "minecraft:deepslate_coal_ore": 5
+    "minecraft:iron_ore": 8
+    "minecraft:deepslate_iron_ore": 8
+    "minecraft:gold_ore": 15
+    "minecraft:deepslate_gold_ore": 15
+    "minecraft:redstone_ore": 8
+    "minecraft:deepslate_redstone_ore": 8
+    "minecraft:emerald_ore": 10
+    "minecraft:deepslate_emerald_ore": 10
+    "minecraft:lapis_ore": 12
+    "minecraft:deepslate_lapis_ore": 12
+    "minecraft:diamond_ore": 20
+    "minecraft:deepslate_diamond_ore": 20
+    "minecraft:nether_quartz_ore": 12
+    "minecraft:nether_gold_ore": 8
+    "minecraft:ancient_debris": 30
   tags:
-    "minecraft:logs": 5
 excavation:
   blocks:
-    "minecraft:oak_log": 5
-    "minecraft:spruce_log": 5
+    "minecraft:dirt": 1
+    "minecraft:grass_block": 2
+    "minecraft:mycelium": 5
+    "minecraft:podzol": 2
+    "minecraft:gravel": 2
+    "minecraft:sand": 2
+    "minecraft:red_sand": 4
+    "minecraft:mud": 3
+    "minecraft:muddy_mangrove_roots": 3
+    "minecraft:clay": 5
+    "minecraft:rooted_dirt": 5
+    "minecraft:soul_sand": 3
+    "minecraft:soul_soil": 3
   tags:
-    "minecraft:logs": 5
 herbalism:
   blocks:
-    "minecraft:oak_log": 5
-    "minecraft:spruce_log": 5
+    "minecraft:short_dry_grass":1,
+    "minecraft:short_grass":1,
+    "minecraft:tall_grass":1,
+    "minecraft:tall_dry_grass":1,
+    "minecraft:seagrass":1,
+    "minecraft:tall_seagrass":1,
+    "minecraft:bush":1,
+    "minecraft:fern":1,
+    "minecraft:large_fern":1,
+    "minecraft:vine":5,
+    "minecraft:cave_vines":5,
+    "minecraft:cave_vines_plant":5,
+    "minecraft:pumpkin":10,
+    "minecraft:melon":10,
+    "minecraft:cocoa":20,
+    "minecraft:sugar_cane":20,
+    "minecraft:cactus":20,
+    "minecraft:wheat":50,
+    "minecraft:potatoes":50,
+    "minecraft:carrots":50,
+    "minecraft:beetroots":50,
+    "minecraft:nether_wart":50,
+    "minecraft:lily_pad":50,
+    "minecraft:big_dripleaf":50,
+    "minecraft:big_dripleaf_stem":50,
+    "minecraft:small_dripleaf":100,
+    "minecraft:red_mushroom":150,
+    "minecraft:brown_mushroom":150,
+    "minecraft:crimson_fungus":150,
+    "minecraft:warped_fungus":150,
+    "minecraft:shroomlight":250,
   tags:
-    "minecraft:logs": 5
+    "minecraft:flowers": 5
