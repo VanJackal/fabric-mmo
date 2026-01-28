@@ -137,7 +137,7 @@ public class FabricMMO implements ModInitializer {
 
 
 		//Acrobatics
-		Registry<DamageType> damageTypeReg = minecraftServer.overworld().registryAccess().lookupOrThrow(Registries.DAMAGE_TYPE);
+		Registry<DamageType> damageTypeReg = minecraftServer.registryAccess().lookupOrThrow(Registries.DAMAGE_TYPE);
 		DamageType fallDamage = damageTypeReg.getValue(DamageTypes.FALL.identifier());
 		ServerLivingEntityEvents.ALLOW_DAMAGE.register(((livingEntity, damageSource, v) -> {
 			if ((livingEntity instanceof Player && damageSource.type() == fallDamage)) {
