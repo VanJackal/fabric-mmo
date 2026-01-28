@@ -5,20 +5,15 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.njackal.mmo.event.*;
 import com.njackal.mmo.logic.ConfigHandler;
 import com.njackal.mmo.logic.XPEventHandler;
-import com.njackal.mmo.logic.XPMath;
 import com.njackal.mmo.persistence.MMODatabase;
-import com.njackal.mmo.persistence.NotificationMode;
-import com.njackal.mmo.persistence.XPType;
+import com.njackal.mmo.presentation.CommandHandler;
 import com.njackal.mmo.presentation.PlayerUIHandler;
 import net.fabricmc.api.ModInitializer;
 
-import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
-import net.minecraft.commands.Commands;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.entity.player.Player;
 import org.slf4j.Logger;
@@ -45,6 +40,7 @@ public class FabricMMO implements ModInitializer {
 	private MMODatabase database;
 
 	private PlayerUIHandler playerUIHandler;
+	private CommandHandler commandHandler;
 
 	private MinecraftServer minecraftServer;
 
@@ -61,6 +57,7 @@ public class FabricMMO implements ModInitializer {
 
 
 
+
 		database = new MMODatabase(//todo load this from config
 				"jdbc:mysql://localhost/fabricmmo",
 				"root",
@@ -69,6 +66,8 @@ public class FabricMMO implements ModInitializer {
 
 		xpEventHandler = new XPEventHandler(database);
 		configHandler = new ConfigHandler(database);
+
+		commandHandler = new CommandHandler(configHandler, database);
 
 
 		LOGGER.debug("Initialized");
@@ -80,7 +79,7 @@ public class FabricMMO implements ModInitializer {
 			}
 		});
 
-		commandInit();
+		commandHandler.initCommands();
 	}
 
 	private void afterServerInit(){
@@ -150,100 +149,4 @@ public class FabricMMO implements ModInitializer {
 
 	}
 
-	private void commandInit() {
-		LOGGER.info("Command Init");
-
-		CommandRegistrationCallback.EVENT.register((dispatch, context, selection) -> {
-			dispatch.register(
-					Commands.literal("mmo").then(
-							Commands.literal("xpbar").then(
-									Commands.argument("visible", BoolArgumentType.bool())
-											.executes((ctx) -> {
-												LOGGER.trace("player setting xpbar visibility");
-												boolean visible = ctx.getArgument("visible", Boolean.class);
-												Player player = ctx.getSource().getPlayer();
-												if (player == null) { // fail if not executed by the player
-													return 0;
-												}
-												configHandler.setXPBarVisibility(player.getUUID(), visible);
-												return 1;
-											})
-							)
-					).then(
-							Commands.literal("notification").then(
-									Commands.argument("mode", StringArgumentType.string())
-											.suggests((ctx, builder)->{
-												for (NotificationMode mode : NotificationMode.values()){
-													builder.suggest(mode.value);
-												}
-												return builder.buildFuture();
-											})
-											.executes(ctx -> {
-												LOGGER.trace("player setting notification mode");
-												Player player = ctx.getSource().getPlayer();
-												if (player == null) { // fail if not executed by the player
-													return 0;
-												}
-												NotificationMode mode = NotificationMode.fromValue(ctx.getArgument("mode", String.class));
-												configHandler.setNotificationMode(player.getUUID(), mode);
-												return 1;
-											})
-							)
-					).then(
-							Commands.literal("level").then(
-									Commands.argument("skill", StringArgumentType.string())
-											.suggests((ctx,builder)->{
-												String start = "";
-												try {
-													start = ctx.getArgument("skill", String.class).toLowerCase();
-												} catch (RuntimeException e) {
-													// do nothing, (doesn't seem to be a way to precheck this)
-												}
-
-												for (XPType t : XPType.values()){
-													if (start.isEmpty() || t.dbId.toLowerCase().startsWith(start)){
-														builder.suggest(t.dbId);
-													}
-												}
-
-												return builder.buildFuture();
-											})
-											.executes(ctx-> {
-												Player player = ctx.getSource().getPlayer();
-												if (player == null) { // fail if not executed by the player
-													return 0;
-												}
-												XPType type = XPType.fromDbId(ctx.getArgument("skill", String.class));
-												if (type == null) {
-													ctx.getSource().sendFailure(Component.literal("Invalid skill"));
-													return 0;
-												}
-
-												int level = XPMath.levelFromXp( database.getXp(player.getUUID(), type) );
-												ctx.getSource().sendSystemMessage(Component.literal("Your %s level is %d".formatted(type.name(), level)));
-
-												return 1;
-											})
-							).executes(ctx -> {
-								Player player = ctx.getSource().getPlayer();
-								if (player == null) { // fail if not executed by the player
-									return 0;
-								}
-
-								ctx.getSource().sendSystemMessage(
-										Component.literal("Your Levels:")
-								);
-								for(XPType t : XPType.values()){
-									ctx.getSource().sendSystemMessage(
-											Component.literal("%s: %d".formatted(t.name(), database.getXp(player.getUUID(), t)))
-									);
-								}
-
-
-								return 1;
-							})
-					)
-			);
-		});
-	}
 }
