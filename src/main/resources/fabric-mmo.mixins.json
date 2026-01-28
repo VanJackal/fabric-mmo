@@ -3,7 +3,8 @@
 	"package": "com.njackal.mmo.mixin",
 	"compatibilityLevel": "JAVA_21",
 	"mixins": [
-		"ExampleMixin"
+		"ExampleMixin",
+		"FishingMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

@@ -37,6 +37,7 @@ public class FabricMMO implements ModInitializer {
 	private PlayerDamageHandler playerDamageHandler;
 	private BlockBreakHandler blockBreakHandler;
 	private AcrobaticsHandler acrobaticsHandler;
+	private FishingHandler fishingHandler;
 
 	private XPEventHandler xpEventHandler;
 	private ConfigHandler configHandler;
@@ -56,6 +57,8 @@ public class FabricMMO implements ModInitializer {
 		playerDamageHandler = new PlayerDamageHandler();
 		blockBreakHandler = new BlockBreakHandler();
 		acrobaticsHandler = new AcrobaticsHandler();
+		fishingHandler = new FishingHandler();
+
 
 
 		database = new MMODatabase(//todo load this from config
@@ -111,6 +114,7 @@ public class FabricMMO implements ModInitializer {
 		playerDamageHandler.observe(xpEventHandler);
 		blockBreakHandler.observe(xpEventHandler);
 		acrobaticsHandler.observe(xpEventHandler);
+		fishingHandler.observe(xpEventHandler);
 
 		xpEventHandler.observeLevelUp(playerUIHandler);
 		xpEventHandler.observeXpGain(playerUIHandler);
@@ -139,6 +143,11 @@ public class FabricMMO implements ModInitializer {
 
 			return true;
 		}));
+
+		//Fishing
+
+		FishingEvents.ITEM_FISHED.register(fishingHandler);
+
 	}
 
 	private void commandInit() {
