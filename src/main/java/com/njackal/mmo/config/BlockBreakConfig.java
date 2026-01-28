@@ -17,19 +17,23 @@ public record BlockBreakConfig(
         Map<Block,Integer> blockXpMap = new HashMap<>();
         Map<TagKey<Block>,Integer> tagXpMap = new HashMap<>();
         // parse blocks
-        for (Map.Entry<String,Integer> block : map.get("blocks").entrySet()) {
-            blockXpMap.put(
-                    blocks.getValue(Identifier.parse(block.getKey())),
-                    block.getValue()
-            );
+        if(map.get("blocks") != null) {
+            for (Map.Entry<String,Integer> block : map.get("blocks").entrySet()) {
+                blockXpMap.put(
+                        blocks.getValue(Identifier.parse(block.getKey())),
+                        block.getValue()
+                );
+            }
         }
         //parse Tags
 
-        for (Map.Entry<String, Integer> tag : map.get("tags").entrySet()) {
-            tagXpMap.put(
-                    TagKey.create(Registries.BLOCK, Identifier.parse(tag.getKey())),
-                    tag.getValue()
-            );
+        if (map.get("tags") != null) {
+            for (Map.Entry<String, Integer> tag : map.get("tags").entrySet()) {
+                tagXpMap.put(
+                        TagKey.create(Registries.BLOCK, Identifier.parse(tag.getKey())),
+                        tag.getValue()
+                );
+            }
         }
 
         return new BlockBreakConfig(blockXpMap, tagXpMap);

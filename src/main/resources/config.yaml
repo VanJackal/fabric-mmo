@@ -50,36 +50,36 @@ excavation:
   tags:
 herbalism:
   blocks:
-    "minecraft:short_dry_grass":1,
-    "minecraft:short_grass":1,
-    "minecraft:tall_grass":1,
-    "minecraft:tall_dry_grass":1,
-    "minecraft:seagrass":1,
-    "minecraft:tall_seagrass":1,
-    "minecraft:bush":1,
-    "minecraft:fern":1,
-    "minecraft:large_fern":1,
-    "minecraft:vine":5,
-    "minecraft:cave_vines":5,
-    "minecraft:cave_vines_plant":5,
-    "minecraft:pumpkin":10,
-    "minecraft:melon":10,
-    "minecraft:cocoa":20,
-    "minecraft:sugar_cane":20,
-    "minecraft:cactus":20,
-    "minecraft:wheat":50,
-    "minecraft:potatoes":50,
-    "minecraft:carrots":50,
-    "minecraft:beetroots":50,
-    "minecraft:nether_wart":50,
-    "minecraft:lily_pad":50,
-    "minecraft:big_dripleaf":50,
-    "minecraft:big_dripleaf_stem":50,
-    "minecraft:small_dripleaf":100,
-    "minecraft:red_mushroom":150,
-    "minecraft:brown_mushroom":150,
-    "minecraft:crimson_fungus":150,
-    "minecraft:warped_fungus":150,
-    "minecraft:shroomlight":250,
+    "minecraft:short_dry_grass": 1
+    "minecraft:short_grass": 1
+    "minecraft:tall_grass": 1
+    "minecraft:tall_dry_grass": 1
+    "minecraft:seagrass": 1
+    "minecraft:tall_seagrass": 1
+    "minecraft:bush": 1
+    "minecraft:fern": 1
+    "minecraft:large_fern": 1
+    "minecraft:vine": 5
+    "minecraft:cave_vines": 5
+    "minecraft:cave_vines_plant": 5
+    "minecraft:pumpkin": 10
+    "minecraft:melon": 10
+    "minecraft:cocoa": 20
+    "minecraft:sugar_cane": 20
+    "minecraft:cactus": 20
+    "minecraft:wheat": 50
+    "minecraft:potatoes": 50
+    "minecraft:carrots": 50
+    "minecraft:beetroots": 50
+    "minecraft:nether_wart": 50
+    "minecraft:lily_pad": 50
+    "minecraft:big_dripleaf": 50
+    "minecraft:big_dripleaf_stem": 50
+    "minecraft:small_dripleaf": 100
+    "minecraft:red_mushroom": 150
+    "minecraft:brown_mushroom": 150
+    "minecraft:crimson_fungus": 150
+    "minecraft:warped_fungus": 150
+    "minecraft:shroomlight": 250
   tags:
     "minecraft:flowers": 5
