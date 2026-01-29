@@ -4,6 +4,7 @@ import com.njackal.mmo.FabricMMO;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import org.yaml.snakeyaml.Yaml;
 
@@ -34,6 +35,7 @@ public class ConfigManager {
         }
 
         Registry<Block> blocks = registryAccess.lookupOrThrow(Registries.BLOCK);
+        Registry<Item> items = registryAccess.lookupOrThrow(Registries.ITEM);
 
 
         InputStream inputStream = new FileInputStream(file);
@@ -43,7 +45,8 @@ public class ConfigManager {
                 BlockBreakConfig.from(map.get("woodcutting"), blocks),
                 BlockBreakConfig.from(map.get("mining"), blocks),
                 BlockBreakConfig.from(map.get("excavation"), blocks),
-                BlockBreakConfig.from(map.get("herbalism"), blocks)
+                BlockBreakConfig.from(map.get("herbalism"), blocks),
+                FishingConfig.from(map.get("fishing"), items)
         );
 
         FabricMMO.LOGGER.info("Config loaded");

@@ -83,3 +83,17 @@ herbalism:
     "minecraft:shroomlight": 250
   tags:
     "minecraft:flowers": 5
+fishing:
+  items:
+    "minecraft:cod": 1
+    "minecraft:salmon": 3
+    "minecraft:pufferfish": 5
+    "minecraft:tropical_fish": 7
+    "minecraft:bow": 11
+    "minecraft:fishing_rod": 11
+    "minecraft:name_tag": 11
+    "minecraft:nautilus_shell": 11
+    "minecraft:saddle": 11
+    "minecraft:enchanted_book": 11
+acrobatics:
+  multiplier: 120
