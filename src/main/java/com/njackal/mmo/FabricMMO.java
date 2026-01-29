@@ -56,10 +56,6 @@ public class FabricMMO implements ModInitializer {
 		LOGGER.info("Initializing Fabric MMO");
 		configManager = new ConfigManager();
 
-		playerDamageHandler = new PlayerDamageHandler();
-		blockBreakHandler = new BlockBreakHandler();
-		acrobaticsHandler = new AcrobaticsHandler();
-		fishingHandler = new FishingHandler();
 
 
 
@@ -96,6 +92,11 @@ public class FabricMMO implements ModInitializer {
 			LOGGER.error("Failed to load config", e);
 		}
 		playerUIHandler = new PlayerUIHandler(minecraftServer, playerConfigHandler);
+
+		playerDamageHandler = new PlayerDamageHandler();
+		blockBreakHandler = new BlockBreakHandler(configManager.config());
+		acrobaticsHandler = new AcrobaticsHandler();
+		fishingHandler = new FishingHandler();
 
 		PlayerBlockBreakEvents.BEFORE.register((
 				world,
