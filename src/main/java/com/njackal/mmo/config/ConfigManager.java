@@ -13,7 +13,7 @@ import java.nio.file.Files;
 import java.util.Map;
 
 public class ConfigManager {
-    private Yaml yaml;
+    private final Yaml yaml;
     private MMOConfig config;
     public ConfigManager() {
         yaml = new Yaml();
