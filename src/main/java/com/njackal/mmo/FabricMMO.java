@@ -1,6 +1,7 @@
 package com.njackal.mmo;
 
 import com.njackal.mmo.config.ConfigManager;
+import com.njackal.mmo.config.DbConfig;
 import com.njackal.mmo.event.*;
 import com.njackal.mmo.logic.PlayerConfigHandler;
 import com.njackal.mmo.logic.XPEventHandler;
@@ -57,14 +58,17 @@ public class FabricMMO implements ModInitializer {
 		configManager = new ConfigManager();
 
 
-
-
-
-		database = new MMODatabase(//todo load this from config
-				"jdbc:mysql://localhost/fabricmmo",
-				"root",
-				"123"
-		);
+        try {
+            DbConfig dbConfig = configManager.getDbConfig("config/FabricMMODB.cfg", "dbConfig.cfg");
+			database = new MMODatabase(
+					dbConfig.url(),
+					dbConfig.user(),
+					dbConfig.pass()
+			);
+        } catch (IOException e) {
+			LOGGER.error("Failed to load database config",e);
+            throw new RuntimeException(e);
+        }
 
 		xpEventHandler = new XPEventHandler(database);
 		playerConfigHandler = new PlayerConfigHandler(database);
@@ -90,6 +94,7 @@ public class FabricMMO implements ModInitializer {
 			configManager.init("config/FabricMMO.yaml", "config.yaml", minecraftServer.registryAccess());
 		} catch (IOException e) {
 			LOGGER.error("Failed to load config", e);
+			throw new RuntimeException(e);
 		}
 		playerUIHandler = new PlayerUIHandler(minecraftServer, playerConfigHandler);
 

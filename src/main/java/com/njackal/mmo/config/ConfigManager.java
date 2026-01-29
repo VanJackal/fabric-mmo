@@ -8,10 +8,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import org.yaml.snakeyaml.Yaml;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.file.Files;
 import java.util.Map;
 
@@ -20,6 +17,23 @@ public class ConfigManager {
     private MMOConfig config;
     public ConfigManager() {
         yaml = new Yaml();
+    }
+
+    public DbConfig getDbConfig(String path, String defaultPath) throws IOException {
+        File file = new File(path);
+        if (!file.exists()){
+            createConfig(file, defaultPath);
+        }
+
+        String url,user,pass;
+
+        InputStream inputStream = new FileInputStream(file);
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+        url = bufferedReader.readLine();
+        user = bufferedReader.readLine();
+        pass = bufferedReader.readLine();
+        inputStream.close();
+        return new DbConfig(url,user,pass);
     }
 
     /**
