@@ -95,7 +95,7 @@ public class FabricMMO implements ModInitializer {
 
 		playerDamageHandler = new PlayerDamageHandler();
 		blockBreakHandler = new BlockBreakHandler(configManager.config());
-		acrobaticsHandler = new AcrobaticsHandler();
+		acrobaticsHandler = new AcrobaticsHandler(configManager.config().acrobaticsMultiplier());
 		fishingHandler = new FishingHandler(configManager.config());
 
 		PlayerBlockBreakEvents.BEFORE.register((

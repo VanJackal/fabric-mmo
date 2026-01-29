@@ -95,5 +95,6 @@ fishing:
     "minecraft:nautilus_shell": 11
     "minecraft:saddle": 11
     "minecraft:enchanted_book": 11
-acrobatics:
-  multiplier: 120
+other:
+  acrobatics:
+    multiplier: 120

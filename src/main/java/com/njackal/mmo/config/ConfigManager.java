@@ -46,7 +46,8 @@ public class ConfigManager {
                 BlockBreakConfig.from(map.get("mining"), blocks),
                 BlockBreakConfig.from(map.get("excavation"), blocks),
                 BlockBreakConfig.from(map.get("herbalism"), blocks),
-                FishingConfig.from(map.get("fishing"), items)
+                FishingConfig.from(map.get("fishing"), items),
+                map.get("other").get("acrobatics").get("multiplier")
         );
 
         FabricMMO.LOGGER.info("Config loaded");

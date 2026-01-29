@@ -7,6 +7,7 @@ public record MMOConfig(
         BlockBreakConfig mining,
         BlockBreakConfig excavation,
         BlockBreakConfig herbalism,
-        FishingConfig fishing
+        FishingConfig fishing,
+        int acrobaticsMultiplier
 ) {
 }
