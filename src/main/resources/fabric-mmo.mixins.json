@@ -5,9 +5,10 @@
   "mixins": [
     "ExampleMixin",
     "FishingMixin",
-    "TameMixin",
     "repair.AnvilMixin",
-    "repair.MendingMixin"
+    "repair.MendingMixin",
+    "tame.HorseTameMixin",
+    "tame.TameMixin"
   ],
   "injectors": {
     "defaultRequire": 1

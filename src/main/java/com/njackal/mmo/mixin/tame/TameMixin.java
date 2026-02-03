@@ -1,4 +1,4 @@
-package com.njackal.mmo.mixin;
+package com.njackal.mmo.mixin.tame;
 
 import com.njackal.mmo.event.TameEvents;
 import net.minecraft.world.entity.EntityType;
