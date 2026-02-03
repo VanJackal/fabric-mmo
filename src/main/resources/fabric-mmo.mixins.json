@@ -5,7 +5,8 @@
   "mixins": [
     "ExampleMixin",
     "FishingMixin",
-    "repair.AnvilMixin"
+    "repair.AnvilMixin",
+    "repair.MendingMixin"
   ],
   "injectors": {
     "defaultRequire": 1
