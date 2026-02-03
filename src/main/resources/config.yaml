@@ -98,3 +98,5 @@ fishing:
 other:
   acrobatics:
     multiplier: 120
+  repair:
+    multiplier: 1
