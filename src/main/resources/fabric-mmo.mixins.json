@@ -5,6 +5,7 @@
   "mixins": [
     "ExampleMixin",
     "FishingMixin",
+    "TameMixin",
     "repair.AnvilMixin",
     "repair.MendingMixin"
   ],

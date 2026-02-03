@@ -95,6 +95,11 @@ fishing:
     "minecraft:nautilus_shell": 11
     "minecraft:saddle": 11
     "minecraft:enchanted_book": 11
+taming:
+  mobs:
+    wolf: 200
+    horse: 1000
+    cat: 200
 other:
   acrobatics:
     multiplier: 120

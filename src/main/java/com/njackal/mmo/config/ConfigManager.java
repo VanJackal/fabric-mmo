@@ -4,6 +4,7 @@ import com.njackal.mmo.FabricMMO;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import org.yaml.snakeyaml.Yaml;
@@ -50,6 +51,7 @@ public class ConfigManager {
 
         Registry<Block> blocks = registryAccess.lookupOrThrow(Registries.BLOCK);
         Registry<Item> items = registryAccess.lookupOrThrow(Registries.ITEM);
+        Registry<EntityType<?>> entity = registryAccess.lookupOrThrow(Registries.ENTITY_TYPE);
 
 
         InputStream inputStream = new FileInputStream(file);
@@ -61,6 +63,7 @@ public class ConfigManager {
                 BlockBreakConfig.from(map.get("excavation"), blocks),
                 BlockBreakConfig.from(map.get("herbalism"), blocks),
                 FishingConfig.from(map.get("fishing"), items),
+                TameConfig.from(map.get("taming").get("mobs"), entity ),
                 map.get("other").get("acrobatics").get("multiplier"),
                 map.get("other").get("repair").get("multiplier")
         );
