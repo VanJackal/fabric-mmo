@@ -9,9 +9,11 @@ import java.util.UUID;
 
 public class PlayerConfigHandler {
     private final MMODatabase database;
+    private boolean doNotifications;
 
     public PlayerConfigHandler(MMODatabase database) {
         this.database = database;
+        this.doNotifications = true;
     }
 
     /**
@@ -37,6 +39,9 @@ public class PlayerConfigHandler {
      * @return return boolean isVisible
      */
     public boolean getXPBarVisibility(UUID player) {
+        if (!doNotifications) {
+            return false; // disable xpbar if notifications are disabled
+        }
         try {
             return database.getXpBarEnabled(player);
         } catch (DatabaseException e) {
@@ -53,6 +58,10 @@ public class PlayerConfigHandler {
      * @return return notification mode for the player
      */
     public NotificationMode getNotificationMode(UUID player) {
+        if (!doNotifications) {//do not show notifications if globally disabled
+            return NotificationMode.Disabled;
+        }
+
         try {
             return database.getNotifMode(player);
         } catch (DatabaseException e) {
@@ -60,6 +69,14 @@ public class PlayerConfigHandler {
             e.printStackTrace();
             return NotificationMode.Disabled;
         }
+    }
+
+    /**
+     * enabled or disable notifications for all players
+     * @param doNotifications notification state (true == enabled)
+     */
+    public void setDoNotifications(boolean doNotifications) {
+        this.doNotifications = doNotifications;
     }
 }
 

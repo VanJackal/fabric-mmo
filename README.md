@@ -29,4 +29,4 @@ An mcMMO clone for fabric.
 - [ ] Taming
 
 ## Other
-- [ ] command for disabling on screen notifications (per player and maybe global)
+- [x] command for disabling on screen notifications (per player and maybe global)

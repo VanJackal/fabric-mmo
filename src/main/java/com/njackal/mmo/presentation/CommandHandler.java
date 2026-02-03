@@ -11,6 +11,7 @@ import com.njackal.mmo.persistence.XPType;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.permissions.Permissions;
 import net.minecraft.world.entity.player.Player;
 
 public class CommandHandler {
@@ -114,6 +115,19 @@ public class CommandHandler {
 
                                 return 1;
                             })
+                    ).then(
+                            Commands.literal("global-notif")
+                                    .requires(source -> source.permissions().hasPermission(Permissions.COMMANDS_OWNER))
+                                    .then(
+                                            Commands.argument("enable", BoolArgumentType.bool())
+                                                    .executes(ctx -> {
+                                                        boolean notifOn = ctx.getArgument("enable", Boolean.class);
+                                                        playerConfigHandler.setDoNotifications(notifOn);
+
+                                                        ctx.getSource().sendSystemMessage(notifOn ? Component.literal("Enabled Notifications") : Component.literal("Disabled Notifications"));
+                                                        return 1;
+                                                    })
+                                    )
                     )
             );
         });
