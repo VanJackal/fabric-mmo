@@ -64,6 +64,7 @@ public class ConfigManager {
                 BlockBreakConfig.from(map.get("herbalism"), blocks),
                 FishingConfig.from(map.get("fishing"), items),
                 TameConfig.from(map.get("taming").get("mobs"), entity ),
+                new CombatConfig(map.get("combat").get("weapons")),
                 map.get("other").get("acrobatics").get("multiplier"),
                 map.get("other").get("repair").get("multiplier")
         );

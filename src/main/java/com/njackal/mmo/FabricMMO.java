@@ -100,7 +100,7 @@ public class FabricMMO implements ModInitializer {
 		}
 		playerUIHandler = new PlayerUIHandler(minecraftServer, playerConfigHandler);
 
-		playerDamageHandler = new PlayerDamageHandler();
+		playerDamageHandler = new PlayerDamageHandler(configManager.config());
 		blockBreakHandler = new BlockBreakHandler(configManager.config());
 		acrobaticsHandler = new AcrobaticsHandler(configManager.config().acrobaticsMultiplier());
 		fishingHandler = new FishingHandler(configManager.config());

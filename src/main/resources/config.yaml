@@ -1,3 +1,13 @@
+combat:
+  weapons:
+    swords: 1
+    archery: 3
+    crossbows: 3
+    tridents: 3
+    spears: 2
+    maces: 1
+    axes: 1
+    unarmed: 1
 woodcutting:
   blocks:
   tags:

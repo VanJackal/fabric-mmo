@@ -8,6 +8,7 @@ public record MMOConfig(
         BlockBreakConfig herbalism,
         FishingConfig fishing,
         TameConfig tame,
+        CombatConfig combat,
         int acrobaticsMultiplier,
         int repairMultiplier
 ) {

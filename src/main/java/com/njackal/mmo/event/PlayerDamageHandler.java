@@ -1,16 +1,20 @@
 package com.njackal.mmo.event;
 
 import com.njackal.mmo.FabricMMO;
+import com.njackal.mmo.config.MMOConfig;
 import com.njackal.mmo.persistence.XPType;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 
 import java.util.List;
+import java.util.Map;
 
 public class PlayerDamageHandler extends PlayerEventHandler {
-    public PlayerDamageHandler() {
+    private final Map<String, Integer> combatXp;
+    public PlayerDamageHandler(MMOConfig config) {
         super();
+        combatXp = config.combat().weaponTypes();
     }
 
     public void handleDamageEvent(PlayerDamage damage) {
@@ -36,7 +40,7 @@ public class PlayerDamageHandler extends PlayerEventHandler {
             xp = XPType.Unarmed;
         }
 
-        fireXpEvent(xp, (int) damage.damageDealt(), damage.player());
+        fireXpEvent(xp, (int) (damage.damageDealt() * combatXp.getOrDefault(xp.dbId.toLowerCase(),0)), damage.player());
     }
 
 }
