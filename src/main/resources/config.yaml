@@ -97,9 +97,18 @@ fishing:
     "minecraft:enchanted_book": 11
 taming:
   mobs:
-    wolf: 200
-    horse: 1000
-    cat: 200
+    "minecraft:horse": 1000
+    "minecraft:donkey": 1000
+    "minecraft:mule": 1200
+    "minecraft:wolf": 200
+    "minecraft:cat": 200
+    "minecraft:parrot": 200
+    "minecraft:llama": 500
+    "minecraft:trader_llama": 700
+    "minecraft:skeleton_horse": 1200
+    "minecraft:zombie_horse": 1200
+    "minecraft:nautilus": 1500
+    "minecraft:zombie_nautilus": 1700
 other:
   acrobatics:
     multiplier: 120
