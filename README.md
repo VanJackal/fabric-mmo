@@ -26,7 +26,7 @@ An mcMMO clone for fabric.
 - [x] Fishing
 - [x] Herbalism
 - [x] Repair
-- [ ] Taming
+- [x] Taming
 
 ## Other
 - [x] command for disabling on screen notifications (per player and maybe global)
