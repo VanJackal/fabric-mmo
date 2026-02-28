@@ -35,7 +35,7 @@ public class MMODatabase {
             PreparedStatement statement = conn.prepareStatement("SELECT * FROM information_schema.tables WHERE table_schema = 'fabricmmo' AND table_name = 'xp' LIMIT 1;");
             ResultSet rs = statement.executeQuery();
             if (rs.next()) {
-                return; //table exists so exit early
+                return; //table exists so exit early//todo this is failing in prod
             }
 
         } catch (SQLException e) {
@@ -73,7 +73,7 @@ public class MMODatabase {
             LOGGER.info("Table Initialized");
         } catch (SQLException e) {
             LOGGER.error("Failed to create tables in MMODatabase");
-            throw new RuntimeException(e);
+            //throw new RuntimeException(e);//todo
         }
     }
 
