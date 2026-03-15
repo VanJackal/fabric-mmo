@@ -9,30 +9,37 @@ import java.util.UUID;
 public class MMODatabase {
 
     public static final Logger LOGGER = LoggerFactory.getLogger("fabric-mmo-db");
+    private final String uri;
+    private final String username;
+    private final String password;
 
-    private final Connection conn;
+    private Connection conn;
 
     public MMODatabase(String uri, String username, String password) {
+        this.uri = uri;
+        this.username = username;
+        this.password = password;
+
         try {//set jdbc driver thing
             Class.forName("com.mysql.cj.jdbc.Driver").getDeclaredConstructor().newInstance();
         } catch (Exception ex) {
             throw new RuntimeException(ex);
         }
 
-        try { // init db connection
-            conn = DriverManager.getConnection(String.format("%s?user=%s&password=%s",uri,username,password));
-            LOGGER.info("Database Connected");
+        initTables();
+    }
 
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+    private Connection getConnection() throws SQLException {
+        if (conn == null || !conn.isValid(1)) {
+            conn = DriverManager.getConnection(String.format("%s?user=%s&password=%s",uri,username,password));
         }
 
-        initTables();
+        return conn;
     }
 
     private void initTables() {
         try {//check if table exists
-            PreparedStatement statement = conn.prepareStatement("SELECT * FROM information_schema.tables WHERE table_schema = 'fabricmmo' AND table_name = 'xp' LIMIT 1;");
+            PreparedStatement statement = getConnection().prepareStatement("SELECT * FROM information_schema.tables WHERE table_schema = 'fabricmmo' AND table_name = 'xp' LIMIT 1;");
             ResultSet rs = statement.executeQuery();
             if (rs.next()) {
                 return; //table exists so exit early//todo this is failing in prod
@@ -45,7 +52,7 @@ public class MMODatabase {
 
         try {// init table
 
-            PreparedStatement statement = conn.prepareStatement(
+            PreparedStatement statement = getConnection().prepareStatement(
                     "CREATE TABLE xp (PlayerID VARCHAR(64), " +
                             "NotifMode VARCHAR(16) DEFAULT 'title', " +
                             "XPBarEnabled TINYINT DEFAULT 1, " +
@@ -80,7 +87,7 @@ public class MMODatabase {
     public int getXp(UUID player, XPType type) {
         int xp = 0;
         try {
-            PreparedStatement statement = conn.prepareStatement(
+            PreparedStatement statement = getConnection().prepareStatement(
                     String.format("SELECT %s FROM xp WHERE PlayerID = ?;", type.dbId)
             );
             statement.setString(1, player.toString());
@@ -97,7 +104,7 @@ public class MMODatabase {
     public int addXp(UUID player, XPType xpType, int xpAmount) {
         int totalXp = 0;
         try {
-            PreparedStatement statement = conn.prepareStatement(
+            PreparedStatement statement = getConnection().prepareStatement(
                     "INSERT INTO xp (PlayerID, %s) VALUES (?, ?) ON DUPLICATE KEY UPDATE %s = %s + ?;".replaceAll("%s",xpType.dbId)
             );
             statement.setString(1, player.toString());
@@ -108,7 +115,7 @@ public class MMODatabase {
 
             LOGGER.debug("{} {} XP added to {}", xpAmount, xpType, player);
 
-            PreparedStatement s = conn.prepareStatement("SELECT %s FROM xp WHERE PlayerID = ?;".replaceAll("%s",xpType.dbId));
+            PreparedStatement s = getConnection().prepareStatement("SELECT %s FROM xp WHERE PlayerID = ?;".replaceAll("%s",xpType.dbId));
             s.setString(1, player.toString());
             ResultSet rs = s.executeQuery();
             if (rs.next()) {
@@ -130,7 +137,7 @@ public class MMODatabase {
      */
     public void initPlayer(UUID uuid) {
         try {
-            PreparedStatement statement = conn.prepareStatement(
+            PreparedStatement statement = getConnection().prepareStatement(
                     "INSERT INTO xp (PlayerID) Values (?) ON DUPLICATE KEY UPDATE PlayerID = PlayerID;"
             );
             statement.setString(1, uuid.toString());
@@ -148,7 +155,7 @@ public class MMODatabase {
     public void setNotifMode(UUID uuid, NotificationMode mode) {
         try {
             PreparedStatement statement =
-                    conn.prepareStatement("UPDATE xp SET NotifMode = ? WHERE PlayerID = ?;");
+                    getConnection().prepareStatement("UPDATE xp SET NotifMode = ? WHERE PlayerID = ?;");
             statement.setString(1, mode.value);
             statement.setString(2, uuid.toString());
             statement.executeUpdate();
@@ -168,7 +175,7 @@ public class MMODatabase {
     public NotificationMode getNotifMode(UUID uuid) throws DatabaseException {
         try {
             PreparedStatement statement =
-                    conn.prepareStatement("SELECT NotifMode FROM xp WHERE PlayerID = ?");
+                    getConnection().prepareStatement("SELECT NotifMode FROM xp WHERE PlayerID = ?");
             statement.setString(1, uuid.toString());
             ResultSet rs = statement.executeQuery();
             if (rs.next()) {
@@ -191,7 +198,7 @@ public class MMODatabase {
     public void setXpBarEnabled(UUID uuid, boolean enabled) {
         try {
             PreparedStatement statement =
-                    conn.prepareStatement("UPDATE xp SET XPBarEnabled = ? WHERE PlayerID = ?");
+                    getConnection().prepareStatement("UPDATE xp SET XPBarEnabled = ? WHERE PlayerID = ?");
             statement.setInt(1, enabled? 1: 0);
             statement.setString(2, uuid.toString());
             statement.executeUpdate();
@@ -209,7 +216,7 @@ public class MMODatabase {
     public boolean getXpBarEnabled(UUID uuid) throws DatabaseException {
         try {
             PreparedStatement statement =
-                    conn.prepareStatement("SELECT XPBarEnabled FROM xp WHERE PlayerID = ?;");
+                    getConnection().prepareStatement("SELECT XPBarEnabled FROM xp WHERE PlayerID = ?;");
             statement.setString(1, uuid.toString());
             ResultSet rs = statement.executeQuery();
             if (rs.next()) {
