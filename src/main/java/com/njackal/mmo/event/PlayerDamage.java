@@ -2,12 +2,12 @@ package com.njackal.mmo.event;
 
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -16,12 +16,17 @@ public record PlayerDamage(UUID player, float damageDealt, List<TagKey<Item>> so
         assert source.getEntity() instanceof Player;
         Player player = (Player) source.getEntity();
         ItemStack weapon = source.getWeaponItem();
-        assert weapon != null;
+        List<TagKey<Item>> sourceItemTags;
+        if (weapon == null) {
+            sourceItemTags = new ArrayList<>();
+        } else {
+            sourceItemTags = weapon.getTags().toList();
+        }
 
         return new PlayerDamage(
                 player.getUUID(),
                 amount,
-                weapon.getTags().toList(),
+                sourceItemTags,
                 entity
         );
     }
