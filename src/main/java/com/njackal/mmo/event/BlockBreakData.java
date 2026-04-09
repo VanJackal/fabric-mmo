@@ -10,6 +10,6 @@ import java.util.UUID;
 
 public record BlockBreakData(UUID player, BlockState blockState, List<TagKey<Item>> toolTags) {
     public static BlockBreakData of(Player player, BlockState blockState) {
-        return new BlockBreakData(player.getUUID(), blockState, player.getMainHandItem().getTags().toList());
+        return new BlockBreakData(player.getUUID(), blockState, player.getMainHandItem().tags().toList());
     }
 }

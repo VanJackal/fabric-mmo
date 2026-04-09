@@ -105,7 +105,7 @@ public class PlayerUIHandler implements LevelUpEvent, XPGainEvent {
     }
 
     private void initPlayerBar(UUID player, ServerPlayer serverPlayer) {
-        CustomBossEvent event = new CustomBossEvent(Identifier.fromNamespaceAndPath(FabricMMO.MOD_ID, "bossbar"), Component.literal("YOU SHOULDN'T SEE THIS"));
+        CustomBossEvent event = new CustomBossEvent(UUID.randomUUID(),Identifier.fromNamespaceAndPath(FabricMMO.MOD_ID, "bossbar"), Component.literal("YOU SHOULDN'T SEE THIS"),()->{});
         event.setColor(BossEvent.BossBarColor.GREEN);
         event.setOverlay(BossEvent.BossBarOverlay.NOTCHED_10);
         event.addPlayer(serverPlayer);

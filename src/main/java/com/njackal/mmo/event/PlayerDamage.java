@@ -20,7 +20,7 @@ public record PlayerDamage(UUID player, float damageDealt, List<TagKey<Item>> so
         if (weapon == null) {
             sourceItemTags = new ArrayList<>();
         } else {
-            sourceItemTags = weapon.getTags().toList();
+            sourceItemTags = weapon.tags().toList();
         }
 
         return new PlayerDamage(

@@ -25,7 +25,7 @@ public class BlockBreakSkill extends PlayerEventHandler {
         if (blockXp.containsKey(data.blockState().getBlock())){
             xp = blockXp.get(data.blockState().getBlock());
         } else {
-            xp = (int) data.blockState().getTags()
+            xp = (int) data.blockState().tags()
                     .filter(tagXp::containsKey)
                     .collect(
                             Collectors.summarizingInt(tagXp::get)
